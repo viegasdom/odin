@@ -4,21 +4,24 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "next",
-    "build": "next build",
-    "start": "next start"
+    "build": "parcel build src/index.html",
+    "start": "parcel src/index.html"
   },
   "author": "viegasdom",
   "license": "MIT",
   "dependencies": {
-    "next": "^9.2.2",
+    "@reduxjs/toolkit": "^1.2.5",
     "react": "^16.13.0",
-    "react-dom": "^16.13.0"
+    "react-dom": "^16.13.0",
+    "react-redux": "^7.2.0"
   },
   "prettier": {
     "printWidth": 80,
     "semi": true,
     "trailingComma": "all",
     "singleQuote": true
+  },
+  "devDependencies": {
+    "parcel-bundler": "^1.12.4"
   }
 }

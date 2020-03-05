@@ -1,5 +1,5 @@
 import React from 'react';
-import SystemPreview from '../components/system-preview';
+import SystemPreview from './features/system-preview';
 
 const App = () => {
   return (

@@ -15,6 +15,7 @@ process_attributes = [
     "cpu_times",
     "memory_info",
     "memory_percent",
+    "username",
 ]
 monitor = Monitor(proc_attributes=process_attributes, rate=10.0)
 app = FastAPI()

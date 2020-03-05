@@ -1,12 +1,51 @@
 import asyncio
 import psutil
-from typing import Any, Dict, List
+from dataclasses import dataclass, asdict
+from typing import Any, Dict, List, Generator, Tuple
 
 
-# For flexibility use the any since each Process attribute
-# since there's multiple types an Process attribute can return
+# For flexibility use the any for the dictionary values
 AttributeValue = Any
-ProcessData = Dict[str, AttributeValue]
+ProcessData = Dict[str, List[AttributeValue]]
+SystemInfo = Dict[str, AttributeValue]
+
+
+@dataclass(frozen=True)
+class Process(object):
+    pid: int
+    name: str
+    status: str
+    create_time: float
+    num_threads: int
+    cpu_percent: float
+    cpu_times: List[float]
+    memory_info: List[int]
+    memory_percent: float
+    username: str
+
+
+def sort_processes(
+    process: ProcessData,
+) -> Tuple[AttributeValue, AttributeValue]:
+    memory = process["memory_percent"] or 0
+    cpu = process["cpu_percent"] or 0
+    return memory, cpu
+
+
+def parse_processes(processes: Generator[Process, None, None]):
+    proc_data: ProcessData = {}
+    for proc in processes:
+        if proc.username.startswith("_"):
+            continue
+
+        procs = proc_data.get(proc.username, [])
+        procs.append(asdict(proc))
+        proc_data[proc.username] = procs
+
+    for username in proc_data.keys():
+        proc_data[username].sort(key=sort_processes, reverse=True)
+
+    return proc_data
 
 
 class Monitor(object):
@@ -14,7 +53,7 @@ class Monitor(object):
         self.proc_attrs = proc_attributes
         self.rate = rate
 
-    async def system_info(self) -> ProcessData:
+    async def system_info(self) -> SystemInfo:
         """
         Function that outputs info about all processes running on the system.
 
@@ -24,11 +63,20 @@ class Monitor(object):
         """
 
         await self.feedback_interval()
-        procs = [proc.info for proc in psutil.process_iter(self.proc_attrs)]
+        raw_procs = (
+            Process(**proc.info)
+            for proc in psutil.process_iter(self.proc_attrs)
+        )
+        procs = parse_processes(raw_procs)
         memory = psutil.virtual_memory()._asdict()
         swap = psutil.swap_memory()._asdict()
         cpu = psutil.cpu_percent()
-        return {"processes": procs, "memory": memory, "swap": swap, "cpu": cpu}
+        return {
+            "processes": procs,
+            "memory": memory,
+            "swap": swap,
+            "cpu": cpu,
+        }
 
     async def feedback_interval(self):
         """
