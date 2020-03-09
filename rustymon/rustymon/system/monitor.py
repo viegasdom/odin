@@ -1,7 +1,7 @@
 import asyncio
 import psutil
 from dataclasses import dataclass, asdict
-from typing import Any, Dict, List, Generator, Tuple
+from typing import Any, Dict, List, Generator
 
 
 # For flexibility use the any for the dictionary values
@@ -24,14 +24,6 @@ class Process(object):
     username: str
 
 
-def sort_processes(
-    process: ProcessData,
-) -> Tuple[AttributeValue, AttributeValue]:
-    memory = process["memory_percent"] or 0
-    cpu = process["cpu_percent"] or 0
-    return memory, cpu
-
-
 def parse_processes(processes: Generator[Process, None, None]):
     proc_data: ProcessData = {}
     for proc in processes:
@@ -43,7 +35,7 @@ def parse_processes(processes: Generator[Process, None, None]):
         proc_data[proc.username] = procs
 
     for username in proc_data.keys():
-        proc_data[username].sort(key=sort_processes, reverse=True)
+        proc_data[username].sort(key=lambda process: process["pid"])
 
     return proc_data
 
@@ -70,7 +62,7 @@ class Monitor(object):
         procs = parse_processes(raw_procs)
         memory = psutil.virtual_memory()._asdict()
         swap = psutil.swap_memory()._asdict()
-        cpu = psutil.cpu_percent()
+        cpu = psutil.cpu_percent(percpu=True)
         return {
             "processes": procs,
             "memory": memory,

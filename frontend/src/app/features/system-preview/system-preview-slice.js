@@ -24,11 +24,7 @@ const systemPreviewSlice = createSlice({
   },
 });
 
-export const {
-  websocketConnection,
-  websocketConnectionSuccess,
-  websocketConnectionError,
-} = systemPreviewSlice.actions;
+export const { websocketConnection, websocketConnectionSuccess, websocketConnectionError } = systemPreviewSlice.actions;
 
 export const connectWebsocket = url => dispatch => {
   const websocket = new WebSocket(url);
