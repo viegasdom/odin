@@ -25,39 +25,56 @@ const SystemPreview = () => {
   if (loading || !data.processes) return <Loading />;
 
   return (
-    <div
-      css={css`
-        margin: auto;
-        max-width: 90vw;
-        width: 1000px;
-      `}
-    >
+    <>
       <div
         css={css`
-          display: flex;
-          justify-content: space-between;
-          width: 900px;
+          padding: 2rem;
+          border-bottom: 1px solid #d0d0d0;
           margin-bottom: 2rem;
+          background: #fafafa;
         `}
       >
         <div
           css={css`
-            display: flex;
-            justify-content: space-between;
-            width: 500px;
+            margin: auto;
+            max-width: 90vw;
+            width: 1000px;
+            display: grid;
+            grid-template-columns: 20% 20% auto;
+            grid-row-gap: 10px;
+            grid-column-gap: 15px;
+
+            > * {
+              box-shadow: 0 4px 8px rgba(0, 0, 0, 0.12);
+              background: white;
+              padding: 1rem;
+              border-radius: 8px;
+            }
           `}
         >
           <MemoryInformation type="Memory" {...data.memory} />
           <MemoryInformation type="Swap" {...data.swap} />
-        </div>
-        <div>
           <CpuInformation cpu={data.cpu} />
         </div>
       </div>
-      {Object.entries(data.processes).map(([username, processes]) => {
-        return <UserPreview key={username} username={username} processes={processes} />;
-      })}
-    </div>
+      <div
+        css={css`
+          margin: auto;
+          max-width: 90vw;
+          width: 1000px;
+        `}
+      >
+        {Object.entries(data.processes).map(([username, processes]) => {
+          return (
+            <UserPreview
+              key={username}
+              username={username}
+              processes={processes}
+            />
+          );
+        })}
+      </div>
+    </>
   );
 };
 

@@ -7,7 +7,6 @@ const Menu = ({ labels }) => {
     <div
       css={css`
         border-bottom: 1px solid #d0d0d0;
-        margin-bottom: 2rem;
         padding-bottom: 10px;
       `}
     >

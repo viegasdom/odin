@@ -25,7 +25,7 @@ const MemoryInformation = ({ type, total, available, percent, used, free }) => {
       ) : null}
 
       <p>
-        <strong>Percent:</strong> {percent}
+        <strong>Percent:</strong> {percent}%
       </p>
     </div>
   );

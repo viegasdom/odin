@@ -3,8 +3,8 @@ import { css } from '@emotion/core';
 
 const CpuInformation = ({ cpu }) => {
   return (
-    <>
-      <h2>CPU Cores Information</h2>
+    <div>
+      <h2>CPU Information</h2>
       <div
         css={css`
           display: grid;
@@ -22,7 +22,7 @@ const CpuInformation = ({ cpu }) => {
           );
         })}
       </div>
-    </>
+    </div>
   );
 };
 
