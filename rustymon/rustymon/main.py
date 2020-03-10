@@ -1,4 +1,4 @@
-from rustymon.system.monitor import Monitor
+from rustymon.system.monitor import Monitor, query_process
 from fastapi import FastAPI, WebSocket
 
 
@@ -19,6 +19,11 @@ process_attributes = [
 ]
 monitor = Monitor(proc_attributes=process_attributes, rate=5.0)
 app = FastAPI()
+
+
+@app.get("/process/{pid}")
+async def get_process(pid: int):
+    return query_process(pid)
 
 
 @app.websocket("/system")

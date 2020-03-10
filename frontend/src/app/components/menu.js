@@ -26,6 +26,18 @@ const Menu = ({ labels }) => {
               border-bottom: 1px solid black;
               padding-bottom: 12px;
               width: fit-content;
+              transition: 0.3s;
+
+              :hover {
+                border-width: 2px;
+                transition: 0.3s ease;
+              }
+
+              :focus {
+                border-width: 3px;
+                transition: 0.3s ease;
+                outline: none;
+              }
             `}
             key={label}
           >

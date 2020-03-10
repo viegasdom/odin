@@ -1,6 +1,7 @@
 import asyncio
 import psutil
 from dataclasses import dataclass, asdict
+from fastapi import HTTPException
 from typing import Any, Dict, List, Generator
 
 
@@ -38,6 +39,20 @@ def parse_processes(processes: Generator[Process, None, None]):
         proc_data[username].sort(key=lambda process: process["pid"])
 
     return proc_data
+
+
+def query_process(pid: int) -> SystemInfo:
+    try:
+        process = psutil.Process(pid)
+    except psutil.NoSuchProcess:
+        raise HTTPException(status_code=404, detail="Process not found")
+
+    if not process.is_running():
+        raise HTTPException(
+            status_code=404, detail="Process is not running anymore"
+        )
+
+    return process.as_dict()
 
 
 class Monitor(object):

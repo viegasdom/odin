@@ -9,6 +9,22 @@ const BATCH_SIZE = 9;
 const ProcessLink = styled(Link)`
   text-decoration: None;
   color: black;
+
+  border-radius: 8px;
+  padding: 5px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.12);
+  transition: 0.3s;
+
+  :hover {
+    box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.12);
+    transform: translate3D(0, -1px, 0) scale(1.03);
+  }
+
+  :focus {
+    box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.12);
+    transform: translate3D(0, -1px, 0) scale(1.05);
+    outline: none;
+  }
 `;
 
 const Button = styled.button`
@@ -28,6 +44,13 @@ const Button = styled.button`
     transition: 0.3s;
     background: white;
     color: black;
+  }
+
+  :focus {
+    transition: 0.3s;
+    background: white;
+    color: black;
+    outline: none;
   }
 
   :disabled {
@@ -66,21 +89,8 @@ const ProcessesPreview = ({ processes }) => {
       >
         {currentProcesses.map(process => {
           return (
-            <ProcessLink to={`processes/${process.pid}`}>
-              <li
-                css={css`
-                  /* border: 1px solid #d0d0d0; */
-                  border-radius: 8px;
-                  padding: 5px;
-                  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.12);
-                  transition: 0.3s;
-
-                  :hover {
-                    box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.12);
-                  }
-                `}
-                key={process.pid}
-              >
+            <ProcessLink key={process.pid} to={`processes/${process.pid}`}>
+              <li>
                 <p>
                   <strong>Process ID:</strong> {process.pid}
                 </p>
@@ -113,10 +123,10 @@ const ProcessesPreview = ({ processes }) => {
           onClick={() => setShowMore(showMore + 1)}
           disabled={notShowMore}
         >
-          Show More
+          Show More &darr;
         </Button>
         <Button onClick={() => setShowMore(showMore - 1)} disabled={!showMore}>
-          Show Less
+          Show Less &uarr;
         </Button>
       </div>
     </>
