@@ -7,9 +7,6 @@ import { useDispatch } from 'react-redux';
 import { connectWebsocket } from './features/system-preview/system-preview-slice';
 import ProcessView from './features/process-view';
 
-const Home = () => <SystemPreview />;
-const Process = () => <ProcessView />;
-
 const App = () => {
   const dispatch = useDispatch();
 
@@ -21,8 +18,8 @@ const App = () => {
     <Layout>
       <Menu labels={['Overview']} />
       <Router>
-        <Home path="/" />
-        <Process path="/processes/:pid" />
+        <SystemPreview path="/" />
+        <ProcessView path="/processes/:pid" />
       </Router>
     </Layout>
   );

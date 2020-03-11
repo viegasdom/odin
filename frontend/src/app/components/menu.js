@@ -22,20 +22,20 @@ const Menu = ({ labels }) => {
             to={label === 'Overview' ? '/' : label.toLowerCase()}
             css={css`
               text-decoration: none;
-              color: black;
+              color: #666;
               border-bottom: 1px solid black;
               padding-bottom: 12px;
               width: fit-content;
               transition: 0.3s;
 
               :hover {
-                border-width: 2px;
-                transition: 0.3s ease;
+                color: black;
+                transition: 0.3s;
               }
 
               :focus {
-                border-width: 3px;
-                transition: 0.3s ease;
+                transition: 0.3s;
+                color: black;
                 outline: none;
               }
             `}
