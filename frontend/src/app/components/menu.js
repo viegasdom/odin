@@ -19,7 +19,7 @@ const Menu = ({ labels }) => {
       >
         {labels.map(label => (
           <Link
-            to={label.toLowerCase()}
+            to={label === 'Overview' ? '/' : label.toLowerCase()}
             css={css`
               text-decoration: none;
               color: black;

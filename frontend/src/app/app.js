@@ -1,14 +1,28 @@
-import React from 'react';
-import { css } from '@emotion/core';
+import React, { useEffect } from 'react';
+import { Router } from '@reach/router';
 import SystemPreview from './features/system-preview';
 import Layout from './components/layout';
 import Menu from './components/menu';
+import { useDispatch } from 'react-redux';
+import { connectWebsocket } from './features/system-preview/system-preview-slice';
+
+const Home = () => <SystemPreview />;
+const Process = () => <h1>Process</h1>;
 
 const App = () => {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(connectWebsocket('ws://localhost:8000/system'));
+  }, []);
+
   return (
     <Layout>
       <Menu labels={['Overview']} />
-      <SystemPreview />
+      <Router>
+        <Home path="/" />
+        <Process path="/processes/:pid" />
+      </Router>
     </Layout>
   );
 };

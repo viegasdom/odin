@@ -1,9 +1,10 @@
 import React from 'react';
 import { css } from '@emotion/core';
-import useWebsocket from '../../hooks/use-websocket';
+
 import UserPreview from '../../components/user-preview';
 import MemoryInformation from '../../components/memory-information';
 import CpuInformation from '../../components/cpu-information';
+import { useSelector } from 'react-redux';
 
 const WebSocketError = () => {
   return <h1>Error loading the websocket</h1>;
@@ -14,7 +15,7 @@ const Loading = () => {
 };
 
 const SystemPreview = () => {
-  const [data, loading, error] = useWebsocket();
+  const { data, loading, error } = useSelector(state => state.systemPreview);
 
   // Guard against possible websocket errors and return a error component
   // TODO: Create an error page that should get the error and render that instead

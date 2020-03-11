@@ -52,7 +52,7 @@ def query_process(pid: int) -> SystemInfo:
             status_code=404, detail="Process is not running anymore"
         )
 
-    return process.as_dict()
+    return {"detail": process.as_dict()}
 
 
 class Monitor(object):

@@ -29,10 +29,7 @@ const showMore = (array, { batchSize, uniqueID }) => {
       setCurrentDisplayed(
         currentDisplayed.slice(0, currentDisplayed.length - batchSize),
       );
-      return;
-    }
-
-    if (showMore && showMore < batched.length) {
+    } else if (showMore && showMore < batched.length) {
       setCurrentDisplayed([...currentDisplayed, ...batched[showMore]]);
     }
 
