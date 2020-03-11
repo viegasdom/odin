@@ -5,9 +5,10 @@ import Layout from './components/layout';
 import Menu from './components/menu';
 import { useDispatch } from 'react-redux';
 import { connectWebsocket } from './features/system-preview/system-preview-slice';
+import ProcessView from './features/process-view';
 
 const Home = () => <SystemPreview />;
-const Process = () => <h1>Process</h1>;
+const Process = () => <ProcessView />;
 
 const App = () => {
   const dispatch = useDispatch();
