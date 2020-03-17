@@ -52,7 +52,7 @@ def query_process(pid: int) -> SystemInfo:
             status_code=404, detail="Process is not running anymore"
         )
 
-    return {"detail": process.as_dict()}
+    return process.as_dict()
 
 
 class Monitor(object):
@@ -78,11 +78,24 @@ class Monitor(object):
         memory = psutil.virtual_memory()._asdict()
         swap = psutil.swap_memory()._asdict()
         cpu = psutil.cpu_percent(percpu=True)
+        os = {
+            "posix": psutil.POSIX,
+            "linux": psutil.LINUX,
+            "windows": psutil.WINDOWS,
+            "macos": psutil.MACOS,
+            "freebsd": psutil.FREEBSD,
+            "netbsd": psutil.NETBSD,
+            "openbsd": psutil.OPENBSD,
+            "bsd": psutil.BSD,
+            "sunos": psutil.SUNOS,
+            "aix": psutil.AIX,
+        }
         return {
             "processes": procs,
             "memory": memory,
             "swap": swap,
             "cpu": cpu,
+            "os": os,
         }
 
     async def feedback_interval(self):

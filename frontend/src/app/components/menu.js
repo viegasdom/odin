@@ -10,13 +10,7 @@ const Menu = ({ labels }) => {
         padding-bottom: 10px;
       `}
     >
-      <div
-        css={css`
-          margin: auto;
-          max-width: 90vw;
-          width: 1000px;
-        `}
-      >
+      <div className="container">
         {labels.map(label => (
           <Link
             to={label === 'Overview' ? '/' : label.toLowerCase()}

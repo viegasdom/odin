@@ -2,7 +2,7 @@ import { useEffect, useState, useRef } from 'react';
 import { isEqual } from 'lodash';
 import { batchArray } from '../utils/array-utils';
 
-const showMore = (array, { batchSize, uniqueID }) => {
+const useShowMore = (array, { batchSize, uniqueID }) => {
   const batched = batchArray(array, batchSize);
   const showMoreRef = useRef();
   const [showMore, setShowMore] = useState(0);
@@ -45,4 +45,4 @@ const showMore = (array, { batchSize, uniqueID }) => {
   return [notShowMore, currentDisplayed, showMore, setShowMore];
 };
 
-export default showMore;
+export default useShowMore;

@@ -14,8 +14,9 @@ const Layout = ({ children }) => {
           html,
           body {
             margin: 0;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans',
-              'Helvetica Neue', sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+              Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue',
+              sans-serif;
             font-size: 1rem;
             line-height: 1.4;
           }
@@ -41,6 +42,16 @@ const Layout = ({ children }) => {
           li {
             margin-top: 0.25rem;
             list-style: none;
+          }
+
+          ul {
+            padding: 0;
+          }
+
+          .container {
+            margin: auto;
+            max-width: 90vw;
+            width: 1000px;
           }
         `}
       />

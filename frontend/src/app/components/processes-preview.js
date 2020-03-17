@@ -10,18 +10,19 @@ const ProcessLink = styled(Link)`
   text-decoration: None;
   color: black;
 
+  border: 1px solid #f1f1f1;
   border-radius: 8px;
   padding: 5px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.12);
+  /* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.12); */
   transition: 0.3s;
 
   :hover {
-    box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.12);
+    /* box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.12); */
     transform: translate3D(0, -1px, 0) scale(1.03);
   }
 
   :focus {
-    box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.12);
+    /* box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.12); */
     transform: translate3D(0, -1px, 0) scale(1.05);
     outline: none;
   }
@@ -63,7 +64,6 @@ const Button = styled.button`
   }
 `;
 
-// TODO: Install reach router and make the Process ID a Link to Process details
 const ProcessesPreview = ({ processes }) => {
   const [notShowMore, currentProcesses, showMore, setShowMore] = useShowMore(
     processes,
@@ -73,11 +73,9 @@ const ProcessesPreview = ({ processes }) => {
     },
   );
 
-  console.log(showMore);
-
   return (
     <>
-      <div
+      <ul
         css={css`
           display: grid;
           grid-template-columns: repeat(3, 33%);
@@ -85,12 +83,16 @@ const ProcessesPreview = ({ processes }) => {
           grid-row-gap: 10px;
           grid-column-gap: 15px;
           margin-bottom: 1rem;
+          list-style-type: none;
         `}
       >
-        {currentProcesses.map(process => {
+        {currentProcesses.map((process, id) => {
           return (
-            <ProcessLink key={process.pid} to={`processes/${process.pid}`}>
-              <li>
+            <ProcessLink
+              key={`position-${id}-${process.pid}`}
+              to={`processes/${process.pid}`}
+            >
+              <li css={css``}>
                 <p>
                   <strong>Process ID:</strong> {process.pid}
                 </p>
@@ -111,7 +113,7 @@ const ProcessesPreview = ({ processes }) => {
             </ProcessLink>
           );
         })}
-      </div>
+      </ul>
       <div
         css={css`
           justify-content: center;
