@@ -38,7 +38,15 @@ app.add_middleware(
 
 @app.get("/processes/{pid}")
 async def get_process(pid: int):
-    return query_process(pid)
+    process = query_process(pid)
+    return process.as_dict()
+
+
+@app.get("/processes/{pid}/kill")
+async def kill_process(pid: int):
+    process = query_process(pid)
+    process.kill()
+    return {"detail": "Process killed with success"}
 
 
 @app.websocket("/system")

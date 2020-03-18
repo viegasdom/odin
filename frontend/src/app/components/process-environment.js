@@ -12,7 +12,7 @@ const ProcessEnvironment = ({ environment }) => {
           background: white;
           padding: 10px;
           border-radius: 8px;
-          width: 500px;
+          width: fit-content;
         `}
       >
         <ul>

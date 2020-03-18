@@ -3,6 +3,8 @@ import { css } from '@emotion/core';
 import styled from '@emotion/styled';
 import { Link } from '@reach/router';
 import useShowMore from '../hooks/use-show-more';
+import { setDefault } from '../utils';
+import { Button } from './buttons';
 
 const BATCH_SIZE = 9;
 
@@ -10,7 +12,7 @@ const ProcessLink = styled(Link)`
   text-decoration: None;
   color: black;
 
-  border: 1px solid #f1f1f1;
+  border: 1px solid #f0f0f0;
   border-radius: 8px;
   padding: 5px;
   /* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.12); */
@@ -25,42 +27,6 @@ const ProcessLink = styled(Link)`
     /* box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.12); */
     transform: translate3D(0, -1px, 0) scale(1.05);
     outline: none;
-  }
-`;
-
-const Button = styled.button`
-  background: black;
-  color: white;
-  font-size: 1rem;
-  padding: 12px;
-  border: 1px solid black;
-  border-radius: 8px;
-  transition: 0.3s;
-
-  :first-of-type {
-    margin-right: 10px;
-  }
-
-  :hover {
-    transition: 0.3s;
-    background: white;
-    color: black;
-  }
-
-  :focus {
-    transition: 0.3s;
-    background: white;
-    color: black;
-    outline: none;
-  }
-
-  :disabled {
-    background: #d0d0d0;
-    color: black;
-  }
-
-  :disabled:hover {
-    cursor: not-allowed;
   }
 `;
 
@@ -101,13 +67,11 @@ const ProcessesPreview = ({ processes }) => {
                 </p>
                 <p>
                   <strong>Process Processor Usage:</strong>{' '}
-                  {process.cpu_percent ? process.cpu_percent.toFixed(2) : 0}
+                  {setDefault(process.cpu_percent, 0).toFixed(2)}%
                 </p>
                 <p>
                   <strong>Process Memory Usage:</strong>{' '}
-                  {process.memory_percent
-                    ? process.memory_percent.toFixed(2)
-                    : 0}
+                  {setDefault(process.memory_percent, 0).toFixed(2)}%
                 </p>
               </li>
             </ProcessLink>

@@ -1,3 +1,4 @@
+import axios from 'axios';
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
@@ -10,34 +11,42 @@ const processViewSlice = createSlice({
   name: 'processView',
   initialState,
   reducers: {
-    fetchProcess(state) {
+    requestLoading(state) {
       state.loading = true;
     },
-    fetchProcessSuccess(state, { payload }) {
+    requestSuccess(state, { payload }) {
       state.error = false;
       state.loading = false;
       state.data = payload;
     },
-    fetchProcessError(state, { payload }) {
+    requestError(state, { payload }) {
       state.error = payload;
     },
   },
 });
 
 export const {
-  fetchProcess,
-  fetchProcessSuccess,
-  fetchProcessError,
+  requestLoading,
+  requestSuccess,
+  requestError,
 } = processViewSlice.actions;
 
 export const requestProcess = id => dispatch => {
-  fetch(`http://127.0.0.1:8000/processes/${id}`)
+  axios
+    .get(`http://127.0.0.1:8000/processes/${id}`)
+    .then(({ data }) => dispatch(requestSuccess(data)))
+    .catch(error => dispatch(requestError(error.response.data)));
+};
+
+export const killProcess = id => dispatch => {
+  fetch(`http://127.0.0.1:8000/processes/${id}/kill`)
     .then(response => {
-      dispatch(fetchProcess());
+      dispatch(requestLoading());
+      console.log('xxx ', response.status);
       return response.json();
     })
-    .then(data => dispatch(fetchProcessSuccess(data)))
-    .catch(error => dispatch(fetchProcessError(error)));
+    .then(data => dispatch(requestSuccess(data)))
+    .catch(error => dispatch(requestError(error)));
 };
 
 export default processViewSlice.reducer;

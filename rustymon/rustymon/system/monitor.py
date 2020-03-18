@@ -36,12 +36,14 @@ def parse_processes(processes: Generator[Process, None, None]):
         proc_data[proc.username] = procs
 
     for username in proc_data.keys():
-        proc_data[username].sort(key=lambda process: process["pid"])
+        proc_data[username].sort(
+            key=lambda process: process["pid"], reverse=True
+        )
 
     return proc_data
 
 
-def query_process(pid: int) -> SystemInfo:
+def query_process(pid: int) -> psutil.Process:
     try:
         process = psutil.Process(pid)
     except psutil.NoSuchProcess:
@@ -52,7 +54,7 @@ def query_process(pid: int) -> SystemInfo:
             status_code=404, detail="Process is not running anymore"
         )
 
-    return process.as_dict()
+    return process
 
 
 class Monitor(object):

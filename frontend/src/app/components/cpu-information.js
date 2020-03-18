@@ -8,8 +8,8 @@ const CpuInformation = ({ cpu }) => {
       <div
         css={css`
           display: grid;
-          grid-template-columns: repeat(3, 33%);
-          grid-template-rows: repeat(3, auto);
+          grid-template-columns: repeat(4, auto);
+          grid-template-rows: repeat(4, auto);
           grid-row-gap: 1px;
           grid-column-gap: 9px;
         `}
