@@ -42,7 +42,6 @@ export const killProcess = id => dispatch => {
   fetch(`http://127.0.0.1:8000/processes/${id}/kill`)
     .then(response => {
       dispatch(requestLoading());
-      console.log('xxx ', response.status);
       return response.json();
     })
     .then(data => dispatch(requestSuccess(data)))

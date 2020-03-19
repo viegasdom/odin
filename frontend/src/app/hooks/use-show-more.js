@@ -18,9 +18,11 @@ const useShowMore = (array, { batchSize, uniqueID }) => {
         notUpdated.every(element => cd[uniqueID] !== element[uniqueID]),
       )
       .map(cd => cd[uniqueID]);
+
     const updatedElemenents = array.filter(element =>
       toUpdate.includes(element[uniqueID]),
     );
+
     setCurrentDisplayed([...notUpdated, ...updatedElemenents]);
   }, [array]);
 

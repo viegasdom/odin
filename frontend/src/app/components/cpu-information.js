@@ -1,5 +1,6 @@
 import React from 'react';
 import { css } from '@emotion/core';
+import CPUBar from './cpu-bar';
 
 const CpuInformation = ({ cpu }) => {
   return (
@@ -8,8 +9,8 @@ const CpuInformation = ({ cpu }) => {
       <div
         css={css`
           display: grid;
-          grid-template-columns: repeat(4, auto);
-          grid-template-rows: repeat(4, auto);
+          grid-template-columns: repeat(2, auto);
+          grid-template-rows: repeat(2, auto);
           grid-row-gap: 1px;
           grid-column-gap: 9px;
         `}
@@ -17,7 +18,7 @@ const CpuInformation = ({ cpu }) => {
         {cpu.map((corePercentage, id) => {
           return (
             <li css={css``} key={`${corePercentage}-${id}`}>
-              {corePercentage}
+              <CPUBar cpuPercentage={corePercentage} />
             </li>
           );
         })}

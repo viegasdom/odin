@@ -11,7 +11,6 @@ import ProcessEnvironment from '../../components/process-environment';
 import { Button } from '../../components/buttons';
 
 const dateManipulator = unixTimestamp => {
-  console.log(unixTimestamp);
   const date = new Date(Math.round(unixTimestamp) * 1000);
   return date.toUTCString();
 };
@@ -20,7 +19,6 @@ const ProcessView = ({ pid }) => {
   const dispatch = useDispatch();
   const [processKilled, setProcessKilled] = useState(false);
   const { data, loading, error } = useSelector(state => state.processView);
-  console.log('xxxx', error);
 
   useEffect(() => {
     dispatch(requestProcess(pid));
@@ -30,13 +28,11 @@ const ProcessView = ({ pid }) => {
   // TODO: Create an error page that should get the error and render that instead
   if (error) return <Process404Error error={error.detail} />;
 
-  // console.log(data);
-
   // Guard when the data is loading and render a loading component
   // TODO: Create a proper loading component that should be rendered instead
   if (loading || !data) return <Loading />;
 
-  if (processKilled) return <h1>Process Killed</h1>;
+  if (processKilled) return <h1>{data.detail}</h1>;
 
   return (
     <div

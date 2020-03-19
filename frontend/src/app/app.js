@@ -16,7 +16,7 @@ const App = () => {
 
   return (
     <Layout>
-      <Menu labels={['Overview']} />
+      <Menu labels={['Overview', 'Processes']} />
       <Router>
         <SystemView path="/" />
         <ProcessView path="/processes/:pid" />

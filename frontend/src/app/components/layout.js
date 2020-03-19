@@ -33,10 +33,7 @@ const Layout = ({ children }) => {
           h5,
           h6 {
             font-size: 14px;
-            line-height: 1.1;
-            + * {
-              margin-top: 1.5rem;
-            }
+            line-height: 2;
           }
 
           li {

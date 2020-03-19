@@ -4,7 +4,7 @@ import { setDefault } from '../utils';
 
 const ProcessCPUInformation = ({ cpuPercent, cpuTimes }) => {
   return (
-    <div css={css``}>
+    <div>
       <h2>CPU Information</h2>
       <ul>
         <li>
@@ -12,7 +12,7 @@ const ProcessCPUInformation = ({ cpuPercent, cpuTimes }) => {
         </li>
         <li>
           <strong>CPU User Time:</strong>{' '}
-          {Math.round(setDefault(cpuTimes[0], 0))}s
+          {cpuTimes ? Math.round(setDefault(cpuTimes[0], 0)) : 0}s
         </li>
       </ul>
     </div>

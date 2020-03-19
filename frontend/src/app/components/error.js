@@ -5,6 +5,5 @@ export const WebSocketError = () => {
 };
 
 export const Process404Error = ({ error }) => {
-  console.log(error);
   return <h1>{error}</h1>;
 };

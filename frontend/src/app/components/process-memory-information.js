@@ -21,8 +21,6 @@ const ProcessMemoryInformation = ({ memoryInfo, memoryPercent }) => {
   const memoryTypes = ['Physical', 'Virtual'];
   const memory = extractMemoryInfo(memoryInfo);
 
-  console.log(memory);
-
   return (
     <div>
       <h2>Memory Information</h2>

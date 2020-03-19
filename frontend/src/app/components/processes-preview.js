@@ -6,7 +6,7 @@ import useShowMore from '../hooks/use-show-more';
 import { setDefault } from '../utils';
 import { Button } from './buttons';
 
-const BATCH_SIZE = 9;
+const BATCH_SIZE = 12;
 
 const ProcessLink = styled(Link)`
   text-decoration: None;

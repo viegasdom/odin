@@ -16,6 +16,7 @@ const Menu = ({ labels }) => {
             to={label === 'Overview' ? '/' : label.toLowerCase()}
             css={css`
               text-decoration: none;
+              margin-right: 3rem;
               color: #666;
               border-bottom: 1px solid black;
               padding-bottom: 12px;

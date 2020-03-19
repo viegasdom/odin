@@ -1,8 +1,7 @@
 import React from 'react';
 import { css } from '@emotion/core';
 
-const ProcessEnvironment = ({ environment }) => {
-  console.log(environment);
+const ProcessEnvironment = ({ environment = {} }) => {
   return (
     <>
       <strong>Environment</strong>
