@@ -6,6 +6,7 @@ import Menu from './components/menu';
 import { useDispatch } from 'react-redux';
 import { connectWebsocket } from './features/system-view/system-view-slice';
 import ProcessView from './features/process-view';
+import ProcessesView from './features/processes-view';
 
 const App = () => {
   const dispatch = useDispatch();
@@ -23,6 +24,7 @@ const App = () => {
       </Location>
       <Router>
         <SystemView path="/overview" />
+        <ProcessesView path="/processes" />
         <ProcessView path="/processes/:pid" />
       </Router>
     </Layout>
