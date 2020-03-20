@@ -56,7 +56,7 @@ const ProcessesPreview = ({ processes }) => {
           return (
             <ProcessLink
               key={`position-${id}-${process.pid}`}
-              to={`processes/${process.pid}`}
+              to={`/processes/${process.pid}`}
             >
               <li css={css``}>
                 <p>

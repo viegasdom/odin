@@ -1,6 +1,12 @@
-from rustymon.system.monitor import Monitor, query_process
 from fastapi import FastAPI, WebSocket
 from fastapi.middleware.cors import CORSMiddleware
+from rustymon.system.monitor import (
+    AttributeValue,
+    Monitor,
+    query_process,
+    query_processes,
+)
+from typing import Dict
 
 
 origins = [
@@ -36,13 +42,19 @@ app.add_middleware(
 )
 
 
+@app.get("/processes")
+async def get_processes():
+    processes = query_processes()
+    return processes
+
+
 @app.get("/processes/{pid}")
-async def get_process(pid: int):
+async def get_process(pid: int) -> Dict[str, AttributeValue]:
     process = query_process(pid)
     return process.as_dict()
 
 
-@app.get("/processes/{pid}/kill")
+@app.post("/processes/{pid}/kill")
 async def kill_process(pid: int):
     process = query_process(pid)
     process.kill()

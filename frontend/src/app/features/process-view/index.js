@@ -148,9 +148,11 @@ const ProcessView = ({ pid }) => {
               <strong>Executable</strong>
               <p>{data.exe}</p>
             </li>
-            <li>
-              <ProcessEnvironment environment={data.environ} />
-            </li>
+            {data.environ ? (
+              <li>
+                <ProcessEnvironment environment={data.environ} />
+              </li>
+            ) : null}
           </ul>
         </div>
       </div>

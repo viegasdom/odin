@@ -39,13 +39,10 @@ export const requestProcess = id => dispatch => {
 };
 
 export const killProcess = id => dispatch => {
-  fetch(`http://127.0.0.1:8000/processes/${id}/kill`)
-    .then(response => {
-      dispatch(requestLoading());
-      return response.json();
-    })
-    .then(data => dispatch(requestSuccess(data)))
-    .catch(error => dispatch(requestError(error)));
+  axios
+    .post(`http://127.0.0.1:8000/processes/${id}/kill`)
+    .then(({ data }) => dispatch(requestSuccess(data)))
+    .catch(error => dispatch(requestError(error.response.data)));
 };
 
 export default processViewSlice.reducer;

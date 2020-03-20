@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Router } from '@reach/router';
+import { Router, Location } from '@reach/router';
 import SystemView from './features/system-view';
 import Layout from './components/layout';
 import Menu from './components/menu';
@@ -16,9 +16,13 @@ const App = () => {
 
   return (
     <Layout>
-      <Menu labels={['Overview', 'Processes']} />
+      <Location>
+        {({ location }) => (
+          <Menu labels={['Overview', 'Processes']} location={location} />
+        )}
+      </Location>
       <Router>
-        <SystemView path="/" />
+        <SystemView path="/overview" />
         <ProcessView path="/processes/:pid" />
       </Router>
     </Layout>

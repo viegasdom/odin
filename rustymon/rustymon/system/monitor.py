@@ -57,6 +57,10 @@ def query_process(pid: int) -> psutil.Process:
     return process
 
 
+def query_processes() -> List[psutil.Process]:
+    return [process.as_dict() for process in psutil.process_iter()]
+
+
 class Monitor(object):
     def __init__(self, proc_attributes: List[str], rate: float = 10.0):
         self.proc_attrs = proc_attributes

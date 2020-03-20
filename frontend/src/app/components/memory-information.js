@@ -5,25 +5,27 @@ const MemoryInformation = ({ type, total, available, percent, used, free }) => {
   return (
     <div>
       <h2>{type} Details</h2>
-      <p>
-        <strong>Total:</strong> {memoryConverter(total)} GB
-      </p>
-      <p>
-        <strong>Used:</strong> {memoryConverter(used)} GB
-      </p>
-      <p>
-        <strong>Free:</strong> {memoryConverter(free)} GB
-      </p>
+      <ul>
+        <li>
+          <strong>Total:</strong> {memoryConverter(total)} GB
+        </li>
+        <li>
+          <strong>Used:</strong> {memoryConverter(used)} GB
+        </li>
+        <li>
+          <strong>Free:</strong> {memoryConverter(free)} GB
+        </li>
 
-      {available ? (
-        <p>
-          <strong>Available:</strong> {memoryConverter(available)} GB
-        </p>
-      ) : null}
+        {available ? (
+          <li>
+            <strong>Available:</strong> {memoryConverter(available)} GB
+          </li>
+        ) : null}
 
-      <p>
-        <strong>Percent:</strong> {percent}%
-      </p>
+        <li>
+          <strong>Percent:</strong> {percent}%
+        </li>
+      </ul>
     </div>
   );
 };
