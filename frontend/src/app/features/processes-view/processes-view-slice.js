@@ -32,6 +32,7 @@ export const {
 } = processesViewSlice.actions;
 
 export const requestProcesses = () => dispatch => {
+  dispatch(requestLoading());
   axios
     .get(`http://127.0.0.1:8000/processes/`)
     .then(({ data }) => dispatch(requestSuccess(data)))

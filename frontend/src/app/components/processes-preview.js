@@ -12,7 +12,7 @@ const ProcessLink = styled(Link)`
   text-decoration: None;
   color: black;
 
-  border: 1px solid #f0f0f0;
+  border: 1px solid #d0d0d0;
   border-radius: 8px;
   padding: 5px;
   /* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.12); */

@@ -31,9 +31,16 @@ const Layout = ({ children }) => {
           h3,
           h4,
           h5,
-          h6 {
+          h6,
+          th {
             font-size: 14px;
             line-height: 2;
+          }
+
+          td,
+          th {
+            text-align: left;
+            padding: 40px;
           }
 
           li {
@@ -49,6 +56,21 @@ const Layout = ({ children }) => {
             margin: auto;
             max-width: 90vw;
             width: 1000px;
+          }
+
+          .row {
+            border-bottom: 1px solid black;
+            transition: 0.1s;
+
+            :hover {
+              background: #fafafa;
+              transition: 0.1s;
+            }
+
+            :focus {
+              background: #fafafa;
+              transition: 0.1s;
+            }
           }
         `}
       />
