@@ -1,6 +1,8 @@
 export const batchArray = (array, subArraySize) => {
   const batch = [];
+
   let subArray = [];
+
   for (let i = 0; i < array.length; i++) {
     const element = array[i];
     if (i && i % subArraySize === 0) {
@@ -9,5 +11,6 @@ export const batchArray = (array, subArraySize) => {
     }
     subArray.push(element);
   }
+
   return batch;
 };
