@@ -1,10 +1,11 @@
+import { css } from '@emotion/core';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { isEmpty } from 'lodash';
 
 import Loading from '../../components/loading';
 import { Process404Error } from '../../components/error';
 import { requestProcess, killProcess } from './process-view-slice';
-import { css } from '@emotion/core';
 import ProcessCPUInformation from '../../components/process-cpu-information';
 import ProcessMemoryInformation from '../../components/process-memory-information';
 import ProcessEnvironment from '../../components/process-environment';
@@ -141,14 +142,18 @@ const ProcessView = ({ pid }) => {
               <strong>Created at</strong>
               <p>{dateManipulator(data.create_time)}</p>
             </li>
-            <li>
-              <strong>Thread number</strong> <p>{data.num_threads}</p>
-            </li>
-            <li>
-              <strong>Executable</strong>
-              <p>{data.exe}</p>
-            </li>
-            {data.environ ? (
+            {data.num_threads ? (
+              <li>
+                <strong>Thread number</strong> <p>{data.num_threads}</p>
+              </li>
+            ) : null}
+            {data.exe ? (
+              <li>
+                <strong>Executable</strong>
+                <p>{data.exe}</p>
+              </li>
+            ) : null}
+            {!isEmpty(data.environ) ? (
               <li>
                 <ProcessEnvironment environment={data.environ} />
               </li>

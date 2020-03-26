@@ -1,12 +1,11 @@
 from fastapi import FastAPI, WebSocket
 from fastapi.middleware.cors import CORSMiddleware
 from rustymon.system.monitor import (
-    AttributeValue,
     Monitor,
     query_process,
     query_processes,
 )
-from typing import Dict
+from typing import Optional
 
 
 origins = [
@@ -43,13 +42,21 @@ app.add_middleware(
 
 
 @app.get("/processes")
-async def get_processes():
-    processes = query_processes()
+async def get_processes(search: Optional[str] = None):
+    """
+    Fetches all the processes currently running in the system.
+
+    Can receive a query parameter:
+        - search: Will query for processes that have either a name,
+                  username or pid matching the search string.
+    """
+
+    processes = query_processes(search)
     return processes
 
 
 @app.get("/processes/{pid}")
-async def get_process(pid: int) -> Dict[str, AttributeValue]:
+async def get_process(pid: int):
     process = query_process(pid)
     return process.as_dict()
 

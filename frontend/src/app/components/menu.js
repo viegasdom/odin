@@ -3,7 +3,6 @@ import { css } from '@emotion/core';
 import { Link } from '@reach/router';
 
 const Menu = ({ labels, location }) => {
-  console.log(location);
   return (
     <div
       css={css`

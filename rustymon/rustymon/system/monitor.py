@@ -1,14 +1,17 @@
 import asyncio
 import psutil
+
 from dataclasses import dataclass, asdict
 from fastapi import HTTPException
-from typing import Any, Dict, List, Generator
+from typing import Any, Dict, List, Generator, Optional
+
+from .filters import Search
 
 
 # For flexibility use the any for the dictionary values
-AttributeValue = Any
-ProcessData = Dict[str, List[AttributeValue]]
-SystemInfo = Dict[str, AttributeValue]
+_AttributeValue = Any
+_ProcessData = Dict[str, List[_AttributeValue]]
+_SystemInfo = Dict[str, _AttributeValue]
 
 
 @dataclass(frozen=True)
@@ -25,8 +28,8 @@ class Process(object):
     username: str
 
 
-def parse_processes(processes: Generator[Process, None, None]):
-    proc_data: ProcessData = {}
+def parse_processes(processes: Generator[Process, None, None]) -> _ProcessData:
+    proc_data: _ProcessData = {}
     for proc in processes:
         if proc.username.startswith("_"):
             continue
@@ -57,8 +60,19 @@ def query_process(pid: int) -> psutil.Process:
     return process
 
 
-def query_processes() -> List[psutil.Process]:
-    return [process.as_dict() for process in psutil.process_iter()]
+def query_processes(search: Optional[str] = None) -> List[_ProcessData]:
+    if not search:
+        return [process.as_dict() for process in psutil.process_iter()]
+
+    processes = []
+    search_filter = Search(["name", "pid", "username"])
+
+    for process in psutil.process_iter():
+        result = search_filter(process, search)
+        if result:
+            processes.append(result.as_dict())
+
+    return processes
 
 
 class Monitor(object):
@@ -66,7 +80,7 @@ class Monitor(object):
         self.proc_attrs = proc_attributes
         self.rate = rate
 
-    async def system_info(self) -> SystemInfo:
+    async def system_info(self) -> _SystemInfo:
         """
         Function that outputs info about all processes running on the system.
 
@@ -76,10 +90,12 @@ class Monitor(object):
         """
 
         await self.feedback_interval()
+
         raw_procs = (
             Process(**proc.info)
             for proc in psutil.process_iter(self.proc_attrs)
         )
+
         procs = parse_processes(raw_procs)
         memory = psutil.virtual_memory()._asdict()
         swap = psutil.swap_memory()._asdict()
