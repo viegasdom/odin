@@ -31,10 +31,13 @@ export const {
   requestError,
 } = processesViewSlice.actions;
 
-export const requestProcesses = () => dispatch => {
+export const requestProcesses = search => dispatch => {
   dispatch(requestLoading());
+
+  const queryParameters = search ? `?search=${search}` : '';
+
   axios
-    .get(`http://127.0.0.1:8000/processes/`)
+    .get(`http://127.0.0.1:8000/processes/${queryParameters}`)
     .then(({ data }) => dispatch(requestSuccess(data)))
     .catch(error => dispatch(requestError(error.response.data)));
 };

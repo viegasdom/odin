@@ -1,12 +1,17 @@
+import { useState, useEffect, useRef, useCallback } from 'react';
+import { isEqual } from 'lodash';
+
 import { batchArray } from '../utils/array-utils';
-import { useState, useEffect } from 'react';
 
 const useInfiniteScroll = (array, subArraySize) => {
   const batched = batchArray(array, subArraySize);
+
+  const arrayRef = useRef();
+
   const [chunk, setChunk] = useState(0);
   const [currentArray, setCurrentArray] = useState([]);
 
-  const handleScroll = () => {
+  const handleScroll = useCallback(() => {
     if (
       window.innerHeight + document.documentElement.scrollTop !==
       document.documentElement.offsetHeight
@@ -14,8 +19,10 @@ const useInfiniteScroll = (array, subArraySize) => {
       return;
     }
 
-    setChunk(chunk + 1);
-  };
+    if (chunk < batched.length - 1) {
+      setChunk(chunk + 1);
+    }
+  }, [chunk, batched]);
 
   useEffect(() => {
     window.addEventListener('scroll', handleScroll);
@@ -23,13 +30,17 @@ const useInfiniteScroll = (array, subArraySize) => {
   });
 
   useEffect(() => {
-    // Initial setup of the current array being displayed
-    // in order to set it up there has to be a valid array
-    // being passed down to the hook.
-    if (array && !currentArray.length) {
-      setCurrentArray([...batched[0]]);
+    if (!array.length) {
+      setCurrentArray([]);
     }
 
+    if (array.length && !isEqual(arrayRef.current, array)) {
+      arrayRef.current = array;
+      setCurrentArray([...batched[0]]);
+    }
+  }, [array]);
+
+  useEffect(() => {
     // When there's an existing current array
     // get only the elements that are not being currently displayed
     // so there's no issues with duplicate keys in elements.
@@ -41,7 +52,7 @@ const useInfiniteScroll = (array, subArraySize) => {
 
       setCurrentArray([...currentArray, ...filteredBatch]);
     }
-  }, [chunk, array]);
+  }, [chunk]);
 
   return [currentArray];
 };

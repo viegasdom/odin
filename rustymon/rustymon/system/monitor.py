@@ -62,14 +62,18 @@ def query_process(pid: int) -> psutil.Process:
 
 def query_processes(search: Optional[str] = None) -> List[_ProcessData]:
     if not search:
-        return [process.as_dict() for process in psutil.process_iter()]
+        return [
+            process.as_dict()
+            for process in psutil.process_iter()
+            if not process.username().startswith("_")
+        ]
 
     processes = []
     search_filter = Search(["name", "pid", "username"])
 
     for process in psutil.process_iter():
         result = search_filter(process, search)
-        if result:
+        if result and not process.username().startswith("_"):
             processes.append(result.as_dict())
 
     return processes

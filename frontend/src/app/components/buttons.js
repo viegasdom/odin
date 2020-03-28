@@ -23,7 +23,7 @@ export const Button = styled.button`
     transition: 0.3s;
     background: white;
     color: black;
-    outline: none;
+    outline-offset: 3px;
   }
 
   :disabled {

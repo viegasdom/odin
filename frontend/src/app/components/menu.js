@@ -34,7 +34,7 @@ const Menu = ({ labels, location }) => {
                 :focus {
                   transition: 0.3s;
                   color: black;
-                  outline: none;
+                  outline-offset: 3px;
                 }
               `}
               key={label}

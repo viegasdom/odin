@@ -15,18 +15,14 @@ const ProcessLink = styled(Link)`
   border: 1px solid #d0d0d0;
   border-radius: 8px;
   padding: 5px;
-  /* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.12); */
   transition: 0.3s;
 
   :hover {
-    /* box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.12); */
     transform: translate3D(0, -1px, 0) scale(1.03);
   }
 
   :focus {
-    /* box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.12); */
-    transform: translate3D(0, -1px, 0) scale(1.05);
-    outline: none;
+    outline-offset: 3px;
   }
 `;
 

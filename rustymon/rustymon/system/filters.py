@@ -23,11 +23,17 @@ class Search(object):
     def __call__(self, instance: Object, search: str) -> Optional[Object]:
         for field in self.fields:
             instance_attribute_value = getattr(instance, field)
+
+            # Checks if the attribute is a callable, workaround cases where
+            # the value that we want to get is actually a function instead
+            # of a property.
+            # e.g.: Process.username is a function
             instance_value = (
                 instance_attribute_value()
                 if callable(instance_attribute_value)
                 else instance_attribute_value
             )
+
             if search in str(instance_value):
                 return instance
 
