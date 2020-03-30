@@ -34,7 +34,7 @@ class Search(object):
                 else instance_attribute_value
             )
 
-            if search in str(instance_value):
+            if search.strip().lower() in str(instance_value).lower():
                 return instance
 
         return None

@@ -69,7 +69,6 @@ const Layout = ({ children }) => {
 
             :focus {
               background: #fafafa;
-              transition: 0.1s;
             }
           }
         `}

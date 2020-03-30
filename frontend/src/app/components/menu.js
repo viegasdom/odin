@@ -24,7 +24,6 @@ const Menu = ({ labels, location }) => {
                 border-bottom: 1px solid black;
                 padding-bottom: 12px;
                 width: fit-content;
-                transition: 0.3s;
 
                 :hover {
                   color: black;
@@ -32,7 +31,6 @@ const Menu = ({ labels, location }) => {
                 }
 
                 :focus {
-                  transition: 0.3s;
                   color: black;
                   outline-offset: 3px;
                 }

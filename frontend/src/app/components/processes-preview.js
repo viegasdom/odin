@@ -40,7 +40,7 @@ const ProcessesPreview = ({ processes }) => {
       <ul
         css={css`
           display: grid;
-          grid-template-columns: repeat(3, 33%);
+          grid-template-columns: repeat(2, auto);
           grid-template-rows: repeat(3, auto);
           grid-row-gap: 10px;
           grid-column-gap: 15px;
@@ -54,7 +54,7 @@ const ProcessesPreview = ({ processes }) => {
               key={`position-${id}-${process.pid}`}
               to={`/processes/${process.pid}`}
             >
-              <li css={css``}>
+              <li>
                 <p>
                   <strong>Process ID:</strong> {process.pid}
                 </p>
