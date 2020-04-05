@@ -15,7 +15,7 @@ _SystemInfo = Dict[str, _AttributeValue]
 
 
 @dataclass(frozen=True)
-class Process(object):
+class Process:
     pid: int
     name: str
     status: str
@@ -79,7 +79,7 @@ def query_processes(search: Optional[str] = None) -> List[_ProcessData]:
     return processes
 
 
-class Monitor(object):
+class Monitor:
     def __init__(self, proc_attributes: List[str], rate: float = 10.0):
         self.proc_attrs = proc_attributes
         self.rate = rate

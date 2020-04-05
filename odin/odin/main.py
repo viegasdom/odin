@@ -1,6 +1,6 @@
 from fastapi import FastAPI, WebSocket
 from fastapi.middleware.cors import CORSMiddleware
-from rustymon.system.monitor import (
+from odin.system.monitor import (
     Monitor,
     query_process,
     query_processes,
@@ -66,6 +66,14 @@ async def kill_process(pid: int):
     process = query_process(pid)
     process.kill()
     return {"detail": "Process killed with success"}
+
+
+# @app.post("/verify")
+# async def verify_key(key: str):
+#     try:
+#         verify_config_key(key)
+#         return {"key_ "}
+#     except:
 
 
 @app.websocket("/system")

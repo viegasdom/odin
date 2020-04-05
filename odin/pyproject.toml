@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "rustymon"
+name = "odin"
 version = "0.1.0"
 description = ""
 authors = ["viegasdom <viegasdomdev@gmail.com>"]
