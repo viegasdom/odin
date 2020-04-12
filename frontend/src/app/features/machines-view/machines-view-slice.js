@@ -7,8 +7,8 @@ const initialState = {
   error: false,
 };
 
-const processViewSlice = createSlice({
-  name: 'processView',
+const machineViewSlice = createSlice({
+  name: 'machineView',
   initialState,
   reducers: {
     requestSuccess(state, { payload }) {
@@ -23,20 +23,24 @@ const processViewSlice = createSlice({
   },
 });
 
-export const { requestSuccess, requestError } = processViewSlice.actions;
+const { requestSuccess, requestError } = machineViewSlice.actions;
 
-export const requestProcess = (id) => (dispatch) => {
+export const requestMachines = () => (dispatch) => {
   axios
-    .get(`http://127.0.0.1:8000/processes/${id}`)
+    .get(`http://127.0.0.1:5000/machines`)
     .then(({ data }) => dispatch(requestSuccess(data)))
     .catch((error) => dispatch(requestError(error.response.data)));
 };
 
-export const killProcess = (id) => (dispatch) => {
+export const createMachine = ({ accessKey, name, host }) => (dispatch) => {
   axios
-    .post(`http://127.0.0.1:8000/processes/${id}/kill`)
+    .post(`http://127.0.0.1:8000/machines`, {
+      access_key: accessKey,
+      name,
+      host,
+    })
     .then(({ data }) => dispatch(requestSuccess(data)))
     .catch((error) => dispatch(requestError(error.response.data)));
 };
 
-export default processViewSlice.reducer;
+export default machineViewSlice.reducer;

@@ -3,7 +3,7 @@ import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
   data: false,
-  loading: false,
+  loading: true,
   error: false,
 };
 
@@ -11,9 +11,6 @@ const processesViewSlice = createSlice({
   name: 'processesView',
   initialState,
   reducers: {
-    requestLoading(state) {
-      state.loading = true;
-    },
     requestSuccess(state, { payload }) {
       state.error = false;
       state.loading = false;
@@ -21,25 +18,23 @@ const processesViewSlice = createSlice({
     },
     requestError(state, { payload }) {
       state.error = payload;
+      state.loading = false;
     },
   },
 });
 
-export const {
+const {
   requestLoading,
   requestSuccess,
   requestError,
 } = processesViewSlice.actions;
 
-export const requestProcesses = search => dispatch => {
-  dispatch(requestLoading());
-
+export const requestProcesses = (search) => (dispatch) => {
   const queryParameters = search ? `?search=${search}` : '';
-
   axios
     .get(`http://127.0.0.1:8000/processes/${queryParameters}`)
     .then(({ data }) => dispatch(requestSuccess(data)))
-    .catch(error => dispatch(requestError(error.response.data)));
+    .catch((error) => dispatch(requestError(error.response.data)));
 };
 
 export default processesViewSlice.reducer;

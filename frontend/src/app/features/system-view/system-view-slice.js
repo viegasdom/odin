@@ -30,7 +30,7 @@ export const {
   websocketConnectionError,
 } = systemPreviewSlice.actions;
 
-export const connectWebsocket = url => dispatch => {
+export const connectWebsocket = (url) => (dispatch) => {
   const websocket = new WebSocket(url);
   websocket.onopen = () => {
     dispatch(websocketConnection());
@@ -38,7 +38,7 @@ export const connectWebsocket = url => dispatch => {
   websocket.onmessage = ({ data }) => {
     dispatch(websocketConnectionSuccess(JSON.parse(data)));
   };
-  websocket.onerror = e => {
+  websocket.onerror = (e) => {
     dispatch(websocketConnectionError(JSON.parse(e)));
   };
 };
