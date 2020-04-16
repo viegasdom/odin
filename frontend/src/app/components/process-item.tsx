@@ -1,8 +1,16 @@
-import React from 'react';
-import { Link } from '@reach/router';
-import { css } from '@emotion/core';
+/** @jsx jsx */
 
-const ProcessItem = ({ pid, username, name, status }) => {
+import { Link } from '@reach/router';
+import { css, jsx } from '@emotion/core';
+
+type ProcessItemProps = {
+  pid: number;
+  username: string;
+  name: string;
+  status: string;
+};
+
+const ProcessItem = ({ pid, username, name, status }: ProcessItemProps) => {
   return (
     <tr
       className="row"

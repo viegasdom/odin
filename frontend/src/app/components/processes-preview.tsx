@@ -5,6 +5,7 @@ import { Link } from '@reach/router';
 import useShowMore from '../hooks/use-show-more';
 import { setDefault } from '../utils';
 import { Button } from './buttons';
+import { Processes } from '../features/processes-view/processes-view-slice';
 
 const BATCH_SIZE = 12;
 
@@ -26,14 +27,17 @@ const ProcessLink = styled(Link)`
   }
 `;
 
-const ProcessesPreview = ({ processes }) => {
-  const [notShowMore, currentProcesses, showMore, setShowMore] = useShowMore(
-    processes,
-    {
-      batchSize: BATCH_SIZE,
-      uniqueID: 'pid',
-    },
-  );
+type ProcessesPreviewProps = {
+  processes: Processes[];
+};
+
+const ProcessesPreview = ({ processes }: ProcessesPreviewProps) => {
+  const [notShowMore, currentProcesses, showMore, setShowMore] = useShowMore<
+    Processes
+  >(processes, {
+    batchSize: BATCH_SIZE,
+    uniqueID: 'pid',
+  });
 
   return (
     <>

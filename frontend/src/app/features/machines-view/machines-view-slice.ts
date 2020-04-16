@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, Dispatch } from '@reduxjs/toolkit';
 
 const initialState = {
   data: false,
@@ -25,16 +25,24 @@ const machineViewSlice = createSlice({
 
 const { requestSuccess, requestError } = machineViewSlice.actions;
 
-export const requestMachines = () => (dispatch) => {
+export const requestMachines = () => (dispatch: Dispatch) => {
   axios
-    .get(`http://127.0.0.1:5000/machines`)
+    .get('http://127.0.0.1:5000/machines')
     .then(({ data }) => dispatch(requestSuccess(data)))
     .catch((error) => dispatch(requestError(error.response.data)));
 };
 
-export const createMachine = ({ accessKey, name, host }) => (dispatch) => {
+type CreateMachineData = {
+  accessKey: string;
+  name: string;
+  host: string;
+};
+
+export const createMachine = ({ accessKey, name, host }: CreateMachineData) => (
+  dispatch: Dispatch,
+) => {
   axios
-    .post(`http://127.0.0.1:8000/machines`, {
+    .post('http://127.0.0.1:8000/machines', {
       access_key: accessKey,
       name,
       host,

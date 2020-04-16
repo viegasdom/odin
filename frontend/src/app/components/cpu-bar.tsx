@@ -1,13 +1,18 @@
-import React from 'react';
-import { css } from '@emotion/core';
+/** @jsx jsx */
 
-const calculateColor = percentage => {
+import { css, jsx } from '@emotion/core';
+
+const calculateColor = (percentage: number): string => {
   if (percentage >= 25 && percentage <= 75) return '#ffcc00';
   if (percentage >= 75) return '#cc3300';
   return '#99cc33';
 };
 
-const CPUBar = ({ cpuPercentage }) => {
+type CPUBarProps = {
+  cpuPercentage: number;
+};
+
+const CPUBar = ({ cpuPercentage }: CPUBarProps) => {
   return (
     <div
       css={css`

@@ -1,24 +1,23 @@
-import React, {
-  useEffect,
-  useState,
-  useRef,
-  useCallback,
-  useLayoutEffect,
-} from 'react';
+/** @jsx jsx */
+
+import { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { requestProcesses } from './processes-view-slice';
+import { requestProcesses, Processes } from './processes-view-slice';
 import ProcessItem from '../../components/process-item';
-import { css } from '@emotion/core';
+import { css, jsx } from '@emotion/core';
 import useInfiniteScroll from '../../hooks/use-infinite-scroll';
 import useDebounce from '../../hooks/use-debounce';
 import { navigate } from '@reach/router';
+import { RootState } from '../../root-reducer';
 
 const ProcessesView = () => {
   const dispatch = useDispatch();
   const [search, setSearch] = useState('');
-  const { data, loading, error } = useSelector(state => state.processesView);
 
-  const [currentItems] = useInfiniteScroll(data, 20);
+  const selectProcesses = (state: RootState) => state.processesView;
+  const { data, loading, error } = useSelector(selectProcesses);
+
+  const [currentItems] = useInfiniteScroll<Processes>(data || undefined, 20);
   const [debouncedSearch] = useDebounce(search, 300);
 
   useEffect(() => {
@@ -44,7 +43,7 @@ const ProcessesView = () => {
           type="text"
           defaultValue={search.length ? search : ''}
           placeholder="pid, name or username"
-          onChange={e => {
+          onChange={(e) => {
             setSearch(e.target.value);
           }}
           css={css`
@@ -78,7 +77,7 @@ const ProcessesView = () => {
             <th>Status</th>
           </tr>
           {!loading ? (
-            currentItems.map(process => (
+            currentItems.map((process) => (
               <ProcessItem key={process.pid} {...process} />
             ))
           ) : (

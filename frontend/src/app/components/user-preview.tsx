@@ -1,8 +1,15 @@
-import React from 'react';
-import { css } from '@emotion/core';
-import ProcessesPreview from './processes-preview';
+/** @jsx jsx */
 
-const UserPreview = ({ username, processes }) => {
+import { css, jsx } from '@emotion/core';
+import ProcessesPreview from './processes-preview';
+import { Processes } from '../features/processes-view/processes-view-slice';
+
+type UserPreviewProps = {
+  username: string;
+  processes: Processes[];
+};
+
+const UserPreview = ({ username, processes }: UserPreviewProps) => {
   return (
     <div
       css={css`

@@ -1,8 +1,14 @@
-import React from 'react';
-import { css } from '@emotion/core';
+/** @jsx jsx */
+
+import { css, jsx } from '@emotion/core';
 import { Link } from '@reach/router';
 
-const Menu = ({ labels, location }) => {
+type MenuProps = {
+  labels: string[];
+  location: Location;
+};
+
+const Menu = ({ labels, location }: MenuProps) => {
   return (
     <div
       css={css`
@@ -11,7 +17,7 @@ const Menu = ({ labels, location }) => {
       `}
     >
       <div className="container">
-        {labels.map(label => {
+        {labels.map((label) => {
           const active = location.pathname.includes(label.toLowerCase());
           return (
             <Link

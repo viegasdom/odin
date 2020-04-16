@@ -1,8 +1,9 @@
-import React from 'react';
-import { css } from '@emotion/core';
+/** @jsx jsx */
+
+import { css, jsx } from '@emotion/core';
 import { setDefault, memoryConverter } from '../utils';
 
-const extractMemoryInfo = memoryTypes => {
+const extractMemoryInfo = (memoryTypes: number[] | null) => {
   if (!memoryTypes) {
     // If there's no memory types just return a fixed array
     // where the memory usage is 0 in both physical and virtual
@@ -17,7 +18,15 @@ const extractMemoryInfo = memoryTypes => {
   return relevantMemoryTypes;
 };
 
-const ProcessMemoryInformation = ({ memoryInfo, memoryPercent }) => {
+type ProcessMemoryinformationProps = {
+  memoryInfo: number[];
+  memoryPercent: number;
+};
+
+const ProcessMemoryInformation = ({
+  memoryInfo,
+  memoryPercent,
+}: ProcessMemoryinformationProps) => {
   const memoryTypes = ['Physical', 'Virtual'];
   const memory = extractMemoryInfo(memoryInfo);
 

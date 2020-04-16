@@ -1,12 +1,12 @@
-export const batchArray = (array, subArraySize) => {
+export const batchArray = <T>(array: T[], subArraySize: number): T[][] => {
   // Guard for cases where the array length is one
   // return a nested array to be compliat
   if (array.length === 1) {
     return [array];
   }
 
-  const batch = [];
-  let subArray = [];
+  const batch: T[][] = [];
+  let subArray: T[] = [];
   for (let i = 0; i <= array.length; i++) {
     const element = array[i];
     // Check if the index is a multiple of the current size

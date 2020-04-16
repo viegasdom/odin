@@ -1,7 +1,23 @@
 import React from 'react';
 import { memoryConverter } from '../utils';
 
-const MemoryInformation = ({ type, total, available, percent, used, free }) => {
+type MemoryinformationProps = {
+  type: string;
+  total: number;
+  available: number;
+  percent: number;
+  used: number;
+  free: number;
+};
+
+const MemoryInformation = ({
+  type,
+  total,
+  available,
+  percent,
+  used,
+  free,
+}: MemoryinformationProps) => {
   return (
     <div>
       <h2>{type} Details</h2>

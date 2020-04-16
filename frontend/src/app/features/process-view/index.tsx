@@ -1,5 +1,7 @@
-import { css } from '@emotion/core';
-import React, { useEffect, useState } from 'react';
+/** @jsx jsx */
+
+import { css, jsx } from '@emotion/core';
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { isEmpty } from 'lodash';
 
@@ -10,16 +12,23 @@ import ProcessCPUInformation from '../../components/process-cpu-information';
 import ProcessMemoryInformation from '../../components/process-memory-information';
 import ProcessEnvironment from '../../components/process-environment';
 import { Button } from '../../components/buttons';
+import { RootState } from '../../root-reducer';
 
-const dateManipulator = unixTimestamp => {
+const dateManipulator = (unixTimestamp: number) => {
   const date = new Date(Math.round(unixTimestamp) * 1000);
   return date.toUTCString();
 };
 
-const ProcessView = ({ pid }) => {
+type ProcessViewProps = {
+  pid: number;
+};
+
+const ProcessView = ({ pid }: ProcessViewProps) => {
   const dispatch = useDispatch();
   const [processKilled, setProcessKilled] = useState(false);
-  const { data, loading, error } = useSelector(state => state.processView);
+
+  const selectProcess = (state: RootState) => state.processView;
+  const { data, loading, error } = useSelector(selectProcess);
 
   useEffect(() => {
     dispatch(requestProcess(pid));
@@ -33,7 +42,7 @@ const ProcessView = ({ pid }) => {
   // TODO: Create a proper loading component that should be rendered instead
   if (loading || !data) return <Loading />;
 
-  if (processKilled) return <h1>{data.detail}</h1>;
+  if (processKilled && data.detail) return <h1>{data.detail}</h1>;
 
   return (
     <div

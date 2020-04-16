@@ -3,13 +3,25 @@ import { isEqual } from 'lodash';
 
 import { batchArray } from '../utils/array-utils';
 
-const useInfiniteScroll = (array, subArraySize) => {
+// Currently the type of the array that gets passed down
+// to useInfiniteScroll has to implement the IScrollArray
+// unless it's elements have a property pid the array
+// won't be valid.
+// TODO: Think of a better interface so that useInfiniteScroll is more reusable.
+interface IScrollArray {
+  pid: number;
+}
+
+const useInfiniteScroll = <T extends IScrollArray>(
+  array: T[] = [],
+  subArraySize: number,
+) => {
   const batched = batchArray(array, subArraySize);
 
-  const arrayRef = useRef();
+  const arrayRef = useRef<T[]>();
 
   const [chunk, setChunk] = useState(0);
-  const [currentArray, setCurrentArray] = useState([]);
+  const [currentArray, setCurrentArray] = useState<T[]>([]);
 
   const handleScroll = useCallback(() => {
     if (
@@ -45,9 +57,9 @@ const useInfiniteScroll = (array, subArraySize) => {
     // get only the elements that are not being currently displayed
     // so there's no issues with duplicate keys in elements.
     if (currentArray.length) {
-      const currentPids = currentArray.map(element => element.pid);
+      const currentPids = currentArray.map((element) => element.pid);
       const filteredBatch = batched[chunk].filter(
-        element => !currentPids.includes(element.pid),
+        (element) => !currentPids.includes(element.pid),
       );
 
       setCurrentArray([...currentArray, ...filteredBatch]);

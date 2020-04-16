@@ -1,9 +1,17 @@
-import React from 'react';
-import { css } from '@emotion/core';
+/** @jsx jsx */
 
-const ProcessEnvironment = ({ environment = {} }) => {
+import { css, jsx } from '@emotion/core';
+import { Fragment } from 'react';
+
+type ProcessEnvironmentProps = {
+  environment: {
+    [key: string]: string;
+  };
+};
+
+const ProcessEnvironment = ({ environment = {} }: ProcessEnvironmentProps) => {
   return (
-    <>
+    <Fragment>
       <strong>Environment</strong>
       <div
         css={css`
@@ -37,7 +45,7 @@ const ProcessEnvironment = ({ environment = {} }) => {
           })}
         </ul>
       </div>
-    </>
+    </Fragment>
   );
 };
 

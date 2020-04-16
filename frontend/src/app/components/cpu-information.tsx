@@ -1,8 +1,13 @@
-import React from 'react';
-import { css } from '@emotion/core';
+/** @jsx jsx */
+
+import { css, jsx } from '@emotion/core';
 import CPUBar from './cpu-bar';
 
-const CpuInformation = ({ cpu }) => {
+type CPUInformationProps = {
+  cpu: number[];
+};
+
+const CpuInformation = ({ cpu }: CPUInformationProps) => {
   return (
     <div>
       <h2>CPU Information</h2>

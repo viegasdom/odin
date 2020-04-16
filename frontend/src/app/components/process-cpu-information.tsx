@@ -1,8 +1,15 @@
 import React from 'react';
-import { css } from '@emotion/core';
 import { setDefault } from '../utils';
 
-const ProcessCPUInformation = ({ cpuPercent, cpuTimes }) => {
+type ProcessCPUInformationProps = {
+  cpuPercent: number;
+  cpuTimes: number[] | null;
+};
+
+const ProcessCPUInformation = ({
+  cpuPercent,
+  cpuTimes,
+}: ProcessCPUInformationProps) => {
   return (
     <div>
       <h2>CPU Information</h2>

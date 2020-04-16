@@ -1,25 +1,37 @@
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef, Dispatch, SetStateAction } from 'react';
 import { isEqual } from 'lodash';
 import { batchArray } from '../utils/array-utils';
 
-const useShowMore = (array, { batchSize, uniqueID }) => {
+type UseShowMoreOptions = {
+  batchSize: number;
+  uniqueID: string;
+};
+
+interface IShowMoreObject {
+  [key: string]: string | number;
+}
+
+const useShowMore = <T extends IShowMoreObject>(
+  array: T[],
+  { batchSize, uniqueID }: UseShowMoreOptions,
+): [boolean, T[], number, Dispatch<SetStateAction<number>>] => {
   const batched = batchArray(array, batchSize);
-  const showMoreRef = useRef();
+  const showMoreRef = useRef(0);
   const [showMore, setShowMore] = useState(0);
   const [currentDisplayed, setCurrentDisplayed] = useState(batched[showMore]);
   const [notShowMore, setnotShowMore] = useState(true);
 
   useEffect(() => {
-    const notUpdated = currentDisplayed.filter(cd =>
-      array.some(value => isEqual(cd, value)),
+    const notUpdated = currentDisplayed.filter((cd) =>
+      array.some((value) => isEqual(cd, value)),
     );
     const toUpdate = currentDisplayed
-      .filter(cd =>
-        notUpdated.every(element => cd[uniqueID] !== element[uniqueID]),
+      .filter((cd) =>
+        notUpdated.every((element) => cd[uniqueID] !== element[uniqueID]),
       )
-      .map(cd => cd[uniqueID]);
+      .map((cd) => cd[uniqueID]);
 
-    const updatedElemenents = array.filter(element =>
+    const updatedElemenents = array.filter((element) =>
       toUpdate.includes(element[uniqueID]),
     );
 

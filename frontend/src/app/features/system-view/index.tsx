@@ -1,15 +1,19 @@
-import React from 'react';
-import { css } from '@emotion/core';
+/** @jsx jsx */
+
+import { css, jsx } from '@emotion/core';
 import { useSelector } from 'react-redux';
 
 import UserPreview from '../../components/user-preview';
 import MemoryInformation from '../../components/memory-information';
 import CpuInformation from '../../components/cpu-information';
-import WebSocketError from '../../components/error';
+import { WebSocketError } from '../../components/error';
 import Loading from '../../components/loading';
+import { RootState } from '../../root-reducer';
+import { Fragment } from 'react';
 
 const SystemView = () => {
-  const { data, loading, error } = useSelector(state => state.systemPreview);
+  const selectSystem = (state: RootState) => state.systemPreview;
+  const { data, loading, error } = useSelector(selectSystem);
 
   // Guard against possible websocket errors and return a error component
   // TODO: Create an error page that should get the error and render that instead
@@ -17,10 +21,10 @@ const SystemView = () => {
 
   // Guard when the data is loading and render a loading component
   // TODO: Create a proper loading component that should be rendered instead
-  if (loading || !data.processes) return <Loading />;
+  if (loading || !data) return <Loading />;
 
   return (
-    <>
+    <Fragment>
       <div
         css={css`
           padding: 2rem;
@@ -67,7 +71,7 @@ const SystemView = () => {
           );
         })}
       </div>
-    </>
+    </Fragment>
   );
 };
 

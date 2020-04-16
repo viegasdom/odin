@@ -1,9 +1,15 @@
-import React from 'react';
-import { Global, css } from '@emotion/core';
+/** @jsx jsx */
 
-const Layout = ({ children }) => {
+import { Fragment } from 'react';
+import { Global, css, jsx } from '@emotion/core';
+
+type LayoutProps = {
+  children: React.ReactNode;
+};
+
+const Layout = ({ children }: LayoutProps) => {
   return (
-    <>
+    <Fragment>
       <Global
         styles={css`
           * {
@@ -80,7 +86,7 @@ const Layout = ({ children }) => {
       >
         {children}
       </div>
-    </>
+    </Fragment>
   );
 };
 
