@@ -27,4 +27,4 @@ def machine():
         machine = Machine(**serialized_data)
         db.session.add(machine)
         db.session.commit()
-        return jsonify({"detail": "Machine saved with success"})
+        return jsonify(MachineGetSerializer.from_orm(machine).dict())

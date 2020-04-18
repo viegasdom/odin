@@ -10,8 +10,11 @@ import { WebSocketError } from '../../components/error';
 import Loading from '../../components/loading';
 import { RootState } from '../../root-reducer';
 import { Fragment } from 'react';
+import { RouteComponentProps } from '@reach/router';
 
-const SystemView = () => {
+interface SystemViewProps extends RouteComponentProps<{ machineId: number }> {}
+
+const SystemView = ({ machineId }: SystemViewProps) => {
   const selectSystem = (state: RootState) => state.systemPreview;
   const { data, loading, error } = useSelector(selectSystem);
 
@@ -22,6 +25,8 @@ const SystemView = () => {
   // Guard when the data is loading and render a loading component
   // TODO: Create a proper loading component that should be rendered instead
   if (loading || !data) return <Loading />;
+
+  if (!machineId) return <h1>Unknow machine</h1>;
 
   return (
     <Fragment>
@@ -55,10 +60,9 @@ const SystemView = () => {
         </div>
       </div>
       <div
+        className="container"
         css={css`
-          margin: auto;
-          max-width: 90vw;
-          width: 1000px;
+          margin-bottom: 0;
         `}
       >
         {Object.entries(data.processes).map(([username, processes]) => {

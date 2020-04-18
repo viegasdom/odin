@@ -1,4 +1,11 @@
-export const batchArray = <T>(array: T[], subArraySize: number): T[][] => {
+export const batchArray = <T>(
+  array: T[] | null,
+  subArraySize: number,
+): T[][] => {
+  if (!array) {
+    return [];
+  }
+
   // Guard for cases where the array length is one
   // return a nested array to be compliat
   if (array.length === 1) {

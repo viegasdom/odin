@@ -21,12 +21,12 @@ const App = () => {
     <Layout>
       <Location>
         {({ location }) => (
-          <Menu labels={['Overview', 'Processes']} location={location} />
+          <Menu labels={['Machines', 'Processes']} location={location} />
         )}
       </Location>
       <Router>
-        <MachineView path="/" />
-        <SystemView path="/overview" />
+        <MachineView path="/machines" />
+        <SystemView path="/machines/:machineId/overview" />
         <ProcessesView path="/processes" />
         <ProcessView path="/processes/:pid" />
       </Router>

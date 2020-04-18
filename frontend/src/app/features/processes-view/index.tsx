@@ -7,17 +7,17 @@ import ProcessItem from '../../components/process-item';
 import { css, jsx } from '@emotion/core';
 import useInfiniteScroll from '../../hooks/use-infinite-scroll';
 import useDebounce from '../../hooks/use-debounce';
-import { navigate } from '@reach/router';
+import { navigate, RouteComponentProps } from '@reach/router';
 import { RootState } from '../../root-reducer';
 
-const ProcessesView = () => {
+const ProcessesView = (_: RouteComponentProps) => {
   const dispatch = useDispatch();
   const [search, setSearch] = useState('');
 
   const selectProcesses = (state: RootState) => state.processesView;
   const { data, loading, error } = useSelector(selectProcesses);
 
-  const [currentItems] = useInfiniteScroll<Processes>(data || undefined, 20);
+  const [currentItems] = useInfiniteScroll<Processes>(data || null, 20);
   const [debouncedSearch] = useDebounce(search, 300);
 
   useEffect(() => {
@@ -81,7 +81,9 @@ const ProcessesView = () => {
               <ProcessItem key={process.pid} {...process} />
             ))
           ) : (
-            <h1>Loading</h1>
+            <tr>
+              <td>Loading</td>
+            </tr>
           )}
         </tbody>
       </table>

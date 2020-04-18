@@ -40,7 +40,7 @@ const Layout = ({ children }: LayoutProps) => {
           h6,
           th {
             font-size: 14px;
-            line-height: 2;
+            line-height: 4;
           }
 
           td,
@@ -60,7 +60,6 @@ const Layout = ({ children }: LayoutProps) => {
 
           .container {
             margin: auto;
-            max-width: 90vw;
             width: 1000px;
           }
 

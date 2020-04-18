@@ -18,10 +18,11 @@ const Menu = ({ labels, location }: MenuProps) => {
     >
       <div className="container">
         {labels.map((label) => {
-          const active = location.pathname.includes(label.toLowerCase());
+          const path = label.toLowerCase();
+          const active = location.pathname.includes(path);
           return (
             <Link
-              to={label.toLowerCase()}
+              to={path}
               css={css`
                 text-decoration: none;
                 margin-right: 3rem;

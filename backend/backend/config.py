@@ -1,6 +1,7 @@
 import logging
 import os
 from flask import Flask
+from flask_cors import CORS
 
 
 logger = logging.getLogger(__name__)
@@ -33,6 +34,7 @@ def create_app():
     from . import models, routes
 
     app = Flask(__name__)
+    CORS(app)
 
     # Configurations
     env = os.environ.get("ENVIRONMENT", "development")

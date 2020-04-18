@@ -1,13 +1,15 @@
-import React from 'react';
-import { css } from '@emotion/core';
+/** @jsx jsx */
+
+import { css, jsx } from '@emotion/core';
 import styled from '@emotion/styled';
 import { Link } from '@reach/router';
 import useShowMore from '../hooks/use-show-more';
 import { setDefault } from '../utils';
 import { Button } from './buttons';
 import { Processes } from '../features/processes-view/processes-view-slice';
+import { Fragment } from 'react';
 
-const BATCH_SIZE = 12;
+const BATCH_SIZE = 6;
 
 const ProcessLink = styled(Link)`
   text-decoration: None;
@@ -40,12 +42,11 @@ const ProcessesPreview = ({ processes }: ProcessesPreviewProps) => {
   });
 
   return (
-    <>
+    <Fragment>
       <ul
         css={css`
           display: grid;
           grid-template-columns: repeat(2, auto);
-          grid-template-rows: repeat(3, auto);
           grid-row-gap: 10px;
           grid-column-gap: 15px;
           margin-bottom: 1rem;
@@ -95,7 +96,7 @@ const ProcessesPreview = ({ processes }: ProcessesPreviewProps) => {
           Show Less &uarr;
         </Button>
       </div>
-    </>
+    </Fragment>
   );
 };
 

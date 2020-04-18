@@ -7,21 +7,26 @@ import { isEmpty } from 'lodash';
 
 import Loading from '../../components/loading';
 import { Process404Error } from '../../components/error';
-import { requestProcess, killProcess } from './process-view-slice';
+import {
+  requestProcess,
+  KillProcessData,
+  RequestProcessData,
+  killProcess,
+  resetProcess,
+} from './process-view-slice';
 import ProcessCPUInformation from '../../components/process-cpu-information';
 import ProcessMemoryInformation from '../../components/process-memory-information';
 import ProcessEnvironment from '../../components/process-environment';
 import { Button } from '../../components/buttons';
 import { RootState } from '../../root-reducer';
+import { RouteComponentProps } from '@reach/router';
 
 const dateManipulator = (unixTimestamp: number) => {
   const date = new Date(Math.round(unixTimestamp) * 1000);
   return date.toUTCString();
 };
 
-type ProcessViewProps = {
-  pid: number;
-};
+interface ProcessViewProps extends RouteComponentProps<{ pid: number }> {}
 
 const ProcessView = ({ pid }: ProcessViewProps) => {
   const dispatch = useDispatch();
@@ -31,18 +36,30 @@ const ProcessView = ({ pid }: ProcessViewProps) => {
   const { data, loading, error } = useSelector(selectProcess);
 
   useEffect(() => {
-    dispatch(requestProcess(pid));
+    if (pid) {
+      dispatch(requestProcess(pid));
+    }
+    return () => {
+      dispatch(resetProcess());
+    };
   }, []);
 
   // Guard against possible websocket errors and return a error component
   // TODO: Create an error page that should get the error and render that instead
   if (error) return <Process404Error error={error.detail} />;
 
+  if (!pid) return <Process404Error error="Process not found" />;
+
   // Guard when the data is loading and render a loading component
   // TODO: Create a proper loading component that should be rendered instead
   if (loading || !data) return <Loading />;
 
-  if (processKilled && data.detail) return <h1>{data.detail}</h1>;
+  if (processKilled && data) {
+    const killProcessData = data as KillProcessData;
+    return <h1>{killProcessData.detail}</h1>;
+  }
+
+  const processData = data as RequestProcessData;
 
   return (
     <div
@@ -61,7 +78,7 @@ const ProcessView = ({ pid }: ProcessViewProps) => {
         `}
       >
         <h2>
-          Process name: {data.name}{' '}
+          Process name: {processData.name}{' '}
           <span
             css={css`
               margin-left: 10px;
@@ -74,7 +91,7 @@ const ProcessView = ({ pid }: ProcessViewProps) => {
               }
             `}
           >
-            {data.status}
+            {processData.status}
           </span>
         </h2>
         <Button
@@ -100,7 +117,7 @@ const ProcessView = ({ pid }: ProcessViewProps) => {
         `}
       >
         <p>
-          <strong>Process ID:</strong> {data.pid}
+          <strong>Process ID:</strong> {processData.pid}
         </p>
         <div
           css={css`
@@ -119,12 +136,12 @@ const ProcessView = ({ pid }: ProcessViewProps) => {
           `}
         >
           <ProcessCPUInformation
-            cpuPercent={data.cpu_percent}
-            cpuTimes={data.cpu_times}
+            cpuPercent={processData.cpu_percent}
+            cpuTimes={processData.cpu_times}
           />
           <ProcessMemoryInformation
-            memoryPercent={data.memory_percent}
-            memoryInfo={data.memory_info}
+            memoryPercent={processData.memory_percent}
+            memoryInfo={processData.memory_info}
           />
         </div>
         <div>
@@ -149,22 +166,22 @@ const ProcessView = ({ pid }: ProcessViewProps) => {
           >
             <li>
               <strong>Created at</strong>
-              <p>{dateManipulator(data.create_time)}</p>
+              <p>{dateManipulator(processData.create_time)}</p>
             </li>
-            {data.num_threads ? (
+            {processData.num_threads ? (
               <li>
-                <strong>Thread number</strong> <p>{data.num_threads}</p>
+                <strong>Thread number</strong> <p>{processData.num_threads}</p>
               </li>
             ) : null}
-            {data.exe ? (
+            {processData.exe ? (
               <li>
                 <strong>Executable</strong>
-                <p>{data.exe}</p>
+                <p>{processData.exe}</p>
               </li>
             ) : null}
-            {!isEmpty(data.environ) ? (
+            {!isEmpty(processData.environ) ? (
               <li>
-                <ProcessEnvironment environment={data.environ} />
+                <ProcessEnvironment environment={processData.environ} />
               </li>
             ) : null}
           </ul>

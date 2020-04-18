@@ -13,7 +13,7 @@ interface IScrollArray {
 }
 
 const useInfiniteScroll = <T extends IScrollArray>(
-  array: T[] = [],
+  array: T[] | null,
   subArraySize: number,
 ) => {
   const batched = batchArray(array, subArraySize);
@@ -42,11 +42,11 @@ const useInfiniteScroll = <T extends IScrollArray>(
   });
 
   useEffect(() => {
-    if (!array.length) {
+    if (!array?.length) {
       setCurrentArray([]);
     }
 
-    if (array.length && !isEqual(arrayRef.current, array)) {
+    if (array?.length && !isEqual(arrayRef.current, array)) {
       arrayRef.current = array;
       setCurrentArray([...batched[0]]);
     }
