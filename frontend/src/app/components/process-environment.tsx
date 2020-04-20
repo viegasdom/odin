@@ -18,7 +18,6 @@ const ProcessEnvironment = ({ environment = {} }: ProcessEnvironmentProps) => {
           margin-top: 0.5rem;
           background: white;
           padding: 10px;
-          border-radius: 8px;
           width: fit-content;
         `}
       >

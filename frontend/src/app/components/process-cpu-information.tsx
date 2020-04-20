@@ -1,5 +1,6 @@
 import React from 'react';
 import { setDefault } from '../utils';
+import { Card } from 'antd';
 
 type ProcessCPUInformationProps = {
   cpuPercent: number;
@@ -11,7 +12,7 @@ const ProcessCPUInformation = ({
   cpuTimes,
 }: ProcessCPUInformationProps) => {
   return (
-    <div>
+    <Card>
       <h2>CPU Information</h2>
       <ul>
         <li>
@@ -22,7 +23,7 @@ const ProcessCPUInformation = ({
           {cpuTimes ? Math.round(setDefault(cpuTimes[0], 0)) : 0}s
         </li>
       </ul>
-    </div>
+    </Card>
   );
 };
 

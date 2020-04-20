@@ -1,5 +1,6 @@
 import React from 'react';
 import { memoryConverter } from '../utils';
+import { Card } from 'antd';
 
 type MemoryinformationProps = {
   type: string;
@@ -19,7 +20,7 @@ const MemoryInformation = ({
   free,
 }: MemoryinformationProps) => {
   return (
-    <div>
+    <Card>
       <h2>{type} Details</h2>
       <ul>
         <li>
@@ -42,7 +43,7 @@ const MemoryInformation = ({
           <strong>Percent:</strong> {percent}%
         </li>
       </ul>
-    </div>
+    </Card>
   );
 };
 

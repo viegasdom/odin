@@ -2,6 +2,7 @@
 
 import { css, jsx } from '@emotion/core';
 import { setDefault, memoryConverter } from '../utils';
+import { Card } from 'antd';
 
 const extractMemoryInfo = (memoryTypes: number[] | null) => {
   if (!memoryTypes) {
@@ -31,7 +32,7 @@ const ProcessMemoryInformation = ({
   const memory = extractMemoryInfo(memoryInfo);
 
   return (
-    <div>
+    <Card>
       <h2>Memory Information</h2>
       <ul>
         <li>
@@ -56,7 +57,7 @@ const ProcessMemoryInformation = ({
           </div>
         </li>
       </ul>
-    </div>
+    </Card>
   );
 };
 

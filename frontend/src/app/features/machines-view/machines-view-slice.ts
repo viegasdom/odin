@@ -5,17 +5,15 @@ import { createSlice, Dispatch, PayloadAction } from '@reduxjs/toolkit';
 
 // Machine Data
 export type MachineData = {
-  id: string;
-  acess_key: string;
+  id: number;
+  access_key: string;
   name: string;
   host: string;
   created_at: string;
 };
 
 // Machine Request Error
-type MachineError = {
-  detail: string;
-};
+type MachineError = { detail: string };
 
 // State
 type MachineState = {
@@ -50,6 +48,11 @@ const machineViewSlice = createSlice({
       state.loading = false;
       state.data = [...state.data, payload];
     },
+    requestDeleteMachinesSuccess(state, { payload }: PayloadAction<number>) {
+      state.error = false;
+      state.loading = false;
+      state.data = state.data.filter((machine) => machine.id !== payload);
+    },
     requestMachineError(state, { payload }: PayloadAction<MachineError>) {
       state.error = payload;
       state.loading = false;
@@ -61,6 +64,7 @@ const {
   requestGetMachinesSuccess,
   requestCreateMachineSuccess,
   requestMachineError,
+  requestDeleteMachinesSuccess,
 } = machineViewSlice.actions;
 
 export const requestMachines = () => (dispatch: Dispatch) => {
@@ -74,11 +78,7 @@ export const requestMachines = () => (dispatch: Dispatch) => {
     );
 };
 
-type MachinePostData = {
-  accessKey: string;
-  name: string;
-  host: string;
-};
+type MachinePostData = { accessKey: string; name: string; host: string };
 
 export const createMachine = ({ accessKey, name, host }: MachinePostData) => (
   dispatch: Dispatch,
@@ -91,6 +91,15 @@ export const createMachine = ({ accessKey, name, host }: MachinePostData) => (
     })
     .then(({ data }: { data: MachineData }) =>
       dispatch(requestCreateMachineSuccess(data)),
+    )
+    .catch((error: AxiosError) => dispatch(error?.response?.data));
+};
+
+export const deleteMachine = (id: number) => (dispatch: Dispatch) => {
+  axios
+    .delete(`http://127.0.0.1:5000/machines/${id}`)
+    .then(({ data }: { data: number }) =>
+      dispatch(requestDeleteMachinesSuccess(data)),
     )
     .catch((error: AxiosError) => dispatch(error?.response?.data));
 };

@@ -1,7 +1,7 @@
 /** @jsx jsx */
 
 import { css, jsx } from '@emotion/core';
-import CPUBar from './cpu-bar';
+import { Card, Progress } from 'antd';
 
 type CPUInformationProps = {
   cpu: number[];
@@ -9,7 +9,7 @@ type CPUInformationProps = {
 
 const CpuInformation = ({ cpu }: CPUInformationProps) => {
   return (
-    <div>
+    <Card>
       <h2>CPU Information</h2>
       <div
         css={css`
@@ -23,12 +23,18 @@ const CpuInformation = ({ cpu }: CPUInformationProps) => {
         {cpu.map((corePercentage, id) => {
           return (
             <li css={css``} key={`${corePercentage}-${id}`}>
-              <CPUBar cpuPercentage={corePercentage} />
+              <Progress
+                css={css`
+                  max-width: 10rem;
+                `}
+                percent={corePercentage}
+                status="active"
+              />
             </li>
           );
         })}
       </div>
-    </div>
+    </Card>
   );
 };
 

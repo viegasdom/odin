@@ -9,21 +9,12 @@ import SystemView from './features/system-view';
 import { connectWebsocket } from './features/system-view/system-view-slice';
 import ProcessView from './features/process-view';
 import ProcessesView from './features/processes-view';
+import AppMenu from './components/menu';
 
 const App = () => {
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    dispatch(connectWebsocket('ws://localhost:8000/system'));
-  }, []);
-
   return (
     <Layout>
-      <Location>
-        {({ location }) => (
-          <Menu labels={['Machines', 'Processes']} location={location} />
-        )}
-      </Location>
+      <Location>{({ location }) => <AppMenu location={location} />}</Location>
       <Router>
         <MachineView path="/machines" />
         <SystemView path="/machines/:machineId/overview" />

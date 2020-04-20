@@ -1,4 +1,6 @@
 from fastapi import FastAPI, WebSocket
+from fastapi.logger import logger
+from websockets.exceptions import ConnectionClosedError
 from fastapi.middleware.cors import CORSMiddleware
 from odin.system.monitor import (
     Monitor,
@@ -80,5 +82,9 @@ async def kill_process(pid: int):
 async def system_endpoint(websocket: WebSocket):
     await websocket.accept()
     while True:
-        processes = await monitor.system_info()
-        await websocket.send_json(processes)
+        try:
+            processes = await monitor.system_info()
+            await websocket.send_json(processes)
+        except ConnectionClosedError:
+            logger.warning(f"Connection closed")
+            break

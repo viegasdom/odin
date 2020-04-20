@@ -1,7 +1,7 @@
 /** @jsx jsx */
 
 import { css, jsx } from '@emotion/core';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 
 import UserPreview from '../../components/user-preview';
 import MemoryInformation from '../../components/memory-information';
@@ -9,14 +9,25 @@ import CpuInformation from '../../components/cpu-information';
 import { WebSocketError } from '../../components/error';
 import Loading from '../../components/loading';
 import { RootState } from '../../root-reducer';
-import { Fragment } from 'react';
+import { Fragment, useEffect } from 'react';
 import { RouteComponentProps } from '@reach/router';
+import { connectWebsocket, closeWebsocket } from './system-view-slice';
 
 interface SystemViewProps extends RouteComponentProps<{ machineId: number }> {}
 
 const SystemView = ({ machineId }: SystemViewProps) => {
+  const dispatch = useDispatch();
+
   const selectSystem = (state: RootState) => state.systemPreview;
   const { data, loading, error } = useSelector(selectSystem);
+
+  useEffect(() => {
+    dispatch(connectWebsocket('ws://localhost:8000/system'));
+
+    return () => {
+      dispatch(closeWebsocket());
+    };
+  }, []);
 
   // Guard against possible websocket errors and return a error component
   // TODO: Create an error page that should get the error and render that instead
@@ -42,7 +53,7 @@ const SystemView = ({ machineId }: SystemViewProps) => {
           className="container"
           css={css`
             display: grid;
-            grid-template-columns: 20% 20% auto;
+            grid-template-columns: 25% 25% auto;
             grid-row-gap: 10px;
             grid-column-gap: 15px;
 
@@ -50,7 +61,6 @@ const SystemView = ({ machineId }: SystemViewProps) => {
               box-shadow: 0 4px 8px rgba(0, 0, 0, 0.12);
               background: white;
               padding: 1rem;
-              border-radius: 8px;
             }
           `}
         >

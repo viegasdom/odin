@@ -5,7 +5,7 @@ import styled from '@emotion/styled';
 import { Link } from '@reach/router';
 import useShowMore from '../hooks/use-show-more';
 import { setDefault } from '../utils';
-import { Button } from './buttons';
+import { Button, Card } from 'antd';
 import { Processes } from '../features/processes-view/processes-view-slice';
 import { Fragment } from 'react';
 
@@ -15,9 +15,6 @@ const ProcessLink = styled(Link)`
   text-decoration: None;
   color: black;
 
-  border: 1px solid #d0d0d0;
-  border-radius: 8px;
-  padding: 5px;
   transition: 0.3s;
 
   :hover {
@@ -60,20 +57,22 @@ const ProcessesPreview = ({ processes }: ProcessesPreviewProps) => {
               to={`/processes/${process.pid}`}
             >
               <li>
-                <p>
-                  <strong>Process ID:</strong> {process.pid}
-                </p>
-                <p>
-                  <strong>Process Name:</strong> {process.name}
-                </p>
-                <p>
-                  <strong>Process Processor Usage:</strong>{' '}
-                  {setDefault(process.cpu_percent, 0).toFixed(2)}%
-                </p>
-                <p>
-                  <strong>Process Memory Usage:</strong>{' '}
-                  {setDefault(process.memory_percent, 0).toFixed(2)}%
-                </p>
+                <Card>
+                  <p>
+                    <strong>Process ID:</strong> {process.pid}
+                  </p>
+                  <p>
+                    <strong>Process Name:</strong> {process.name}
+                  </p>
+                  <p>
+                    <strong>Process Processor Usage:</strong>{' '}
+                    {setDefault(process.cpu_percent, 0).toFixed(2)}%
+                  </p>
+                  <p>
+                    <strong>Process Memory Usage:</strong>{' '}
+                    {setDefault(process.memory_percent, 0).toFixed(2)}%
+                  </p>
+                </Card>
               </li>
             </ProcessLink>
           );

@@ -1,56 +1,45 @@
 /** @jsx jsx */
 
+import { Menu } from 'antd';
 import { css, jsx } from '@emotion/core';
-import { Link } from '@reach/router';
+import { navigate } from '@reach/router';
+import { useState, Fragment } from 'react';
+import { ClickParam } from 'antd/lib/menu';
 
 type MenuProps = {
-  labels: string[];
   location: Location;
 };
 
-const Menu = ({ labels, location }: MenuProps) => {
+const AppMenu = ({ location }: MenuProps) => {
+  const [current, setCurrent] = useState('machines');
+
+  const clickHandler = (e: ClickParam) => {
+    setCurrent(e.key);
+    navigate(`/${e.key}`);
+  };
+
+  console.log('currenttttt', current);
   return (
-    <div
-      css={css`
-        border-bottom: 1px solid #d0d0d0;
-        padding-bottom: 10px;
-      `}
-    >
-      <div className="container">
-        {labels.map((label) => {
-          const path = label.toLowerCase();
-          const active = location.pathname.includes(path);
-          return (
-            <Link
-              to={path}
-              css={css`
-                text-decoration: none;
-                margin-right: 3rem;
-                color: ${active ? 'black' : '#666'};
-                font-weight: ${active ? 'bold' : 'none'};
-                border-bottom: 1px solid black;
-                padding-bottom: 12px;
-                width: fit-content;
-
-                :hover {
-                  color: black;
-                  transition: 0.3s;
-                }
-
-                :focus {
-                  color: black;
-                  outline-offset: 3px;
-                }
-              `}
-              key={label}
-            >
-              {label}
-            </Link>
-          );
-        })}
-      </div>
-    </div>
+    <Fragment>
+      <Menu
+        onClick={clickHandler}
+        selectedKeys={[location.pathname.split('/')[1]]}
+        mode="horizontal"
+        className="container"
+        css={css`
+          border-bottom: none;
+        `}
+      >
+        <Menu.Item key="machines">Machines</Menu.Item>
+        <Menu.Item key="processes">Processes</Menu.Item>
+      </Menu>
+      <div
+        css={css`
+          border-top: 1px solid #f0f0f0;
+        `}
+      ></div>
+    </Fragment>
   );
 };
 
-export default Menu;
+export default AppMenu;

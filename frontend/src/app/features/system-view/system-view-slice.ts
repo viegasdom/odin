@@ -56,6 +56,11 @@ const systemPreviewSlice = createSlice({
       state.loading = false;
       state.data = payload;
     },
+    websocketCloseSuccess(state) {
+      state.error = false;
+      state.loading = true;
+      state.data = false;
+    },
     websocketConnectionError(state, { payload }: ProcessesErrorPayload) {
       state.error = payload;
     },
@@ -66,23 +71,37 @@ export const {
   websocketConnection,
   websocketConnectionSuccess,
   websocketConnectionError,
+  websocketCloseSuccess,
 } = systemPreviewSlice.actions;
 
+// Socket is defined outside the scope of the thunks this makes it
+// easier to handle opening and closing connections across the thunks.
+// This also tells us that there's only one socket available on this slice.
+let socket: WebSocket | null = null;
+
 export const connectWebsocket = (url: string) => (dispatch: Dispatch) => {
-  const websocket = new WebSocket(url);
-  websocket.onopen = () => {
+  if (socket) {
+    socket.close();
+  }
+  socket = new WebSocket(url);
+  socket.onopen = () => {
     dispatch(websocketConnection());
   };
-  websocket.onmessage = ({ data }) => {
+  socket.onmessage = ({ data }) => {
     dispatch(websocketConnectionSuccess(JSON.parse(data)));
   };
-  websocket.onclose = (e) => {
-    if (e.code === 1006) {
-      dispatch(
-        websocketConnectionError('The connection was closed abnormally'),
-      );
-    }
+};
+
+export const closeWebsocket = () => (dispatch: Dispatch) => {
+  if (!socket) {
+    return;
+  }
+
+  socket.onclose = () => {
+    dispatch(websocketCloseSuccess);
   };
+
+  socket.close(1000);
 };
 
 export default systemPreviewSlice.reducer;

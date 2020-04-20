@@ -55,13 +55,23 @@ const processesViewSlice = createSlice({
       state.error = payload;
       state.loading = false;
     },
+    reset(state) {
+      state.error = false;
+      state.loading = true;
+      state.data = false;
+    },
   },
 });
 
-const { requestSuccess, requestError } = processesViewSlice.actions;
+export const {
+  requestSuccess,
+  requestError,
+  reset,
+} = processesViewSlice.actions;
 
 export const requestProcesses = (search: string) => (dispatch: Dispatch) => {
   const queryParameters = search ? `?search=${search}` : '';
+  dispatch(reset());
   axios
     .get(`http://127.0.0.1:8000/processes/${queryParameters}`)
     .then(({ data }) => dispatch(requestSuccess(data)))

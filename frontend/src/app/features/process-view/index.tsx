@@ -14,10 +14,10 @@ import {
   killProcess,
   resetProcess,
 } from './process-view-slice';
+import { Button } from 'antd';
 import ProcessCPUInformation from '../../components/process-cpu-information';
 import ProcessMemoryInformation from '../../components/process-memory-information';
 import ProcessEnvironment from '../../components/process-environment';
-import { Button } from '../../components/buttons';
 import { RootState } from '../../root-reducer';
 import { RouteComponentProps } from '@reach/router';
 
@@ -77,14 +77,14 @@ const ProcessView = ({ pid }: ProcessViewProps) => {
           text-align: center;
         `}
       >
-        <h2>
+        <h3>
           Process name: {processData.name}{' '}
           <span
             css={css`
               margin-left: 10px;
               background: #28a745;
               padding: 10px;
-              border-radius: 10px;
+              border-radius: 2px;
 
               * > {
                 background: #28a745;
@@ -93,12 +93,13 @@ const ProcessView = ({ pid }: ProcessViewProps) => {
           >
             {processData.status}
           </span>
-        </h2>
+        </h3>
         <Button
           onClick={() => {
             dispatch(killProcess(pid));
             setProcessKilled(true);
           }}
+          type="primary"
         >
           Kill Process
         </Button>
@@ -109,7 +110,7 @@ const ProcessView = ({ pid }: ProcessViewProps) => {
           margin-top: 3rem;
           background: #fafafa;
           padding: 2rem;
-          border-radius: 10px;
+          border-radius: 2px;
 
           & > * {
             margin-bottom: 2rem;
@@ -129,9 +130,6 @@ const ProcessView = ({ pid }: ProcessViewProps) => {
 
             > * {
               box-shadow: 0 4px 8px rgba(0, 0, 0, 0.12);
-              background: white;
-              padding: 1rem;
-              border-radius: 8px;
             }
           `}
         >
@@ -154,7 +152,7 @@ const ProcessView = ({ pid }: ProcessViewProps) => {
 
                 p {
                   background: white;
-                  border-radius: 10px;
+                  border-radius: 2px;
                   padding: 10px;
                   margin-top: 0.5rem;
                   width: fit-content;

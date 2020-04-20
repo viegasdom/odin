@@ -2,13 +2,55 @@
 
 import { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { requestProcesses, Processes } from './processes-view-slice';
-import ProcessItem from '../../components/process-item';
+import { requestProcesses, reset } from './processes-view-slice';
 import { css, jsx } from '@emotion/core';
-import useInfiniteScroll from '../../hooks/use-infinite-scroll';
 import useDebounce from '../../hooks/use-debounce';
-import { navigate, RouteComponentProps } from '@reach/router';
+import { navigate, RouteComponentProps, Link } from '@reach/router';
 import { RootState } from '../../root-reducer';
+import { Input, Table } from 'antd';
+
+const { Search } = Input;
+
+const COLUMNS = [
+  {
+    title: 'PID',
+    dataIndex: 'pid',
+    key: 'pid',
+    render: (pid: number) => {
+      return <Link to={`${pid}`}>{pid}</Link>;
+    },
+  },
+  {
+    title: 'Name',
+    dataIndex: 'name',
+    key: 'name',
+  },
+  {
+    title: 'User',
+    dataIndex: 'username',
+    key: 'user',
+  },
+  {
+    title: 'Status',
+    dataIndex: 'status',
+    key: 'status',
+    render: (status: string) => (
+      <span
+        css={css`
+          background: #28a745;
+          padding: 10px;
+          border-radius: 2px;
+
+          * > {
+            background: #28a745;
+          }
+        `}
+      >
+        {status}
+      </span>
+    ),
+  },
+];
 
 const ProcessesView = (_: RouteComponentProps) => {
   const dispatch = useDispatch();
@@ -17,8 +59,13 @@ const ProcessesView = (_: RouteComponentProps) => {
   const selectProcesses = (state: RootState) => state.processesView;
   const { data, loading, error } = useSelector(selectProcesses);
 
-  const [currentItems] = useInfiniteScroll<Processes>(data || null, 20);
   const [debouncedSearch] = useDebounce(search, 300);
+
+  useEffect(() => {
+    return () => {
+      dispatch(reset());
+    };
+  }, []);
 
   useEffect(() => {
     dispatch(requestProcesses(debouncedSearch));
@@ -37,57 +84,25 @@ const ProcessesView = (_: RouteComponentProps) => {
         className="container"
         css={css`
           margin-top: 2rem;
+          margin-bottom: 2rem;
         `}
       >
-        <input
-          type="text"
+        <Search
           defaultValue={search.length ? search : ''}
           placeholder="pid, name or username"
-          onChange={(e) => {
-            setSearch(e.target.value);
+          loading={loading}
+          onSearch={(value) => {
+            setSearch(value);
           }}
-          css={css`
-            border-radius: 8px;
-            border: 1px solid #d0d0d0;
-            padding: 10px;
-            background: #fafafa;
-            font-size: 14px;
-
-            ::placeholder {
-              font-style: italic;
-            }
-          `}
         />
       </div>
-      <table
-        className="container"
-        css={css`
-          background: #fafafa;
-          padding: 2rem;
-          margin-top: 2rem;
-          border-radius: 8px;
-          border-collapse: collapse;
-        `}
-      >
-        <tbody>
-          <tr className="row">
-            <th>PID</th>
-            <th>Name</th>
-            <th>User</th>
-            <th>Status</th>
-          </tr>
-          {!loading ? (
-            currentItems.map((process) => (
-              <ProcessItem key={process.pid} {...process} />
-            ))
-          ) : (
-            <tr>
-              <td>Loading</td>
-            </tr>
-          )}
-        </tbody>
-      </table>
-      <div></div>
+      <Table
+        columns={COLUMNS}
+        size="large"
+        dataSource={
+          data ? data.map((process) => ({ ...process, key: process.pid })) : []
+        }
+      ></Table>
     </div>
   );
 };
