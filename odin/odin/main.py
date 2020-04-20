@@ -1,6 +1,6 @@
 from fastapi import FastAPI, WebSocket
 from fastapi.logger import logger
-from websockets.exceptions import ConnectionClosedError
+from websockets.exceptions import ConnectionClosedOK
 from fastapi.middleware.cors import CORSMiddleware
 from odin.system.monitor import (
     Monitor,
@@ -85,6 +85,8 @@ async def system_endpoint(websocket: WebSocket):
         try:
             processes = await monitor.system_info()
             await websocket.send_json(processes)
-        except ConnectionClosedError:
-            logger.warning(f"Connection closed")
+        except ConnectionClosedOK as e:
+            host = websocket.client.host
+            port = websocket.client.port
+            logger.info(f"{host}:{port} - Connection closed {e.code}")
             break

@@ -54,7 +54,7 @@ const COLUMNS = [
 
 const ProcessesView = (_: RouteComponentProps) => {
   const dispatch = useDispatch();
-  const [search, setSearch] = useState('');
+  const [search, setSearch] = useState<string>();
 
   const selectProcesses = (state: RootState) => state.processesView;
   const { data, loading, error } = useSelector(selectProcesses);
@@ -69,9 +69,9 @@ const ProcessesView = (_: RouteComponentProps) => {
 
   useEffect(() => {
     dispatch(requestProcesses(debouncedSearch));
-    if (debouncedSearch.length) {
+    if (debouncedSearch?.length) {
       navigate(`?search=${debouncedSearch}`);
-    } else {
+    } else if (debouncedSearch?.length === 0) {
       navigate('/processes');
     }
   }, [debouncedSearch]);
@@ -88,11 +88,10 @@ const ProcessesView = (_: RouteComponentProps) => {
         `}
       >
         <Search
-          defaultValue={search.length ? search : ''}
           placeholder="pid, name or username"
           loading={loading}
-          onSearch={(value) => {
-            setSearch(value);
+          onChange={(e) => {
+            setSearch(e.target.value);
           }}
         />
       </div>

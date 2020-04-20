@@ -29,6 +29,8 @@ const SystemView = ({ machineId }: SystemViewProps) => {
     };
   }, []);
 
+  console.log(data);
+
   // Guard against possible websocket errors and return a error component
   // TODO: Create an error page that should get the error and render that instead
   if (error) return <WebSocketError />;

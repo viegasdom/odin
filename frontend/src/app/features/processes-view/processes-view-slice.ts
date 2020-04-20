@@ -69,7 +69,9 @@ export const {
   reset,
 } = processesViewSlice.actions;
 
-export const requestProcesses = (search: string) => (dispatch: Dispatch) => {
+export const requestProcesses = (search: string | undefined) => (
+  dispatch: Dispatch,
+) => {
   const queryParameters = search ? `?search=${search}` : '';
   dispatch(reset());
   axios

@@ -11,19 +11,18 @@ type MenuProps = {
 };
 
 const AppMenu = ({ location }: MenuProps) => {
-  const [current, setCurrent] = useState('machines');
+  const [current, setCurrent] = useState(location.pathname.split('/')[1]);
 
   const clickHandler = (e: ClickParam) => {
     setCurrent(e.key);
     navigate(`/${e.key}`);
   };
 
-  console.log('currenttttt', current);
   return (
     <Fragment>
       <Menu
         onClick={clickHandler}
-        selectedKeys={[location.pathname.split('/')[1]]}
+        selectedKeys={[current]}
         mode="horizontal"
         className="container"
         css={css`

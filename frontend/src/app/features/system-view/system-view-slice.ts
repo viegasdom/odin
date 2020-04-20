@@ -96,12 +96,8 @@ export const closeWebsocket = () => (dispatch: Dispatch) => {
   if (!socket) {
     return;
   }
-
-  socket.onclose = () => {
-    dispatch(websocketCloseSuccess);
-  };
-
   socket.close(1000);
+  dispatch(websocketCloseSuccess());
 };
 
 export default systemPreviewSlice.reducer;
