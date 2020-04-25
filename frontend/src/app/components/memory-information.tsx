@@ -9,6 +9,7 @@ type MemoryinformationProps = {
   percent: number;
   used: number;
   free: number;
+  loading: boolean;
 };
 
 const MemoryInformation = ({
@@ -18,9 +19,10 @@ const MemoryInformation = ({
   percent,
   used,
   free,
+  loading,
 }: MemoryinformationProps) => {
   return (
-    <Card>
+    <Card loading={loading}>
       <h2>{type} Details</h2>
       <ul>
         <li>

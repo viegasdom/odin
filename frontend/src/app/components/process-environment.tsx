@@ -2,6 +2,8 @@
 
 import { css, jsx } from '@emotion/core';
 import { Fragment } from 'react';
+import { isEmpty } from 'lodash';
+import { LockOutlined } from '@ant-design/icons';
 
 type ProcessEnvironmentProps = {
   environment: {
@@ -22,26 +24,34 @@ const ProcessEnvironment = ({ environment = {} }: ProcessEnvironmentProps) => {
         `}
       >
         <ul>
-          {Object.entries(environment).map(([key, value]) => {
-            return (
-              <li
-                key={key}
-                css={css`
-                  font-family: Fira code;
-                  font-size: 0.7rem;
-                `}
-              >
-                <span
+          {!isEmpty(environment) ? (
+            Object.entries(environment).map(([key, value]) => {
+              return (
+                <li
+                  key={key}
                   css={css`
-                    color: #ff0000a1;
+                    font-family: Fira code;
+                    font-size: 0.7rem;
                   `}
                 >
-                  {key}
-                </span>
-                : {value}
-              </li>
-            );
-          })}
+                  <span
+                    css={css`
+                      color: #ff0000a1;
+                    `}
+                  >
+                    {key}
+                  </span>
+                  : {value}
+                </li>
+              );
+            })
+          ) : (
+            <LockOutlined
+              css={css`
+                font-size: 1.2rem;
+              `}
+            />
+          )}
         </ul>
       </div>
     </Fragment>

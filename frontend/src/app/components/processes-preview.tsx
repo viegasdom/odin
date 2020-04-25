@@ -4,12 +4,12 @@ import { css, jsx } from '@emotion/core';
 import styled from '@emotion/styled';
 import { Link } from '@reach/router';
 import useShowMore from '../hooks/use-show-more';
-import { setDefault } from '../utils';
 import { Button, Card } from 'antd';
 import { Processes } from '../features/processes-view/processes-view-slice';
 import { Fragment } from 'react';
+import { LockOutlined } from '@ant-design/icons';
 
-const BATCH_SIZE = 6;
+const BATCH_SIZE = 12;
 
 const ProcessLink = styled(Link)`
   text-decoration: None;
@@ -18,11 +18,11 @@ const ProcessLink = styled(Link)`
   transition: 0.3s;
 
   :hover {
-    transform: translate3D(0, -1px, 0) scale(1.03);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.12);
   }
 
   :focus {
-    outline-offset: 3px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.12);
   }
 `;
 
@@ -43,7 +43,7 @@ const ProcessesPreview = ({ processes }: ProcessesPreviewProps) => {
       <ul
         css={css`
           display: grid;
-          grid-template-columns: repeat(2, auto);
+          grid-template-columns: repeat(3, auto);
           grid-row-gap: 10px;
           grid-column-gap: 15px;
           margin-bottom: 1rem;
@@ -59,18 +59,22 @@ const ProcessesPreview = ({ processes }: ProcessesPreviewProps) => {
               <li>
                 <Card>
                   <p>
-                    <strong>Process ID:</strong> {process.pid}
+                    <strong>PID:</strong> {process.pid}
                   </p>
                   <p>
-                    <strong>Process Name:</strong> {process.name}
+                    <strong>Name:</strong> {process.name}
                   </p>
                   <p>
-                    <strong>Process Processor Usage:</strong>{' '}
-                    {setDefault(process.cpu_percent, 0).toFixed(2)}%
-                  </p>
-                  <p>
-                    <strong>Process Memory Usage:</strong>{' '}
-                    {setDefault(process.memory_percent, 0).toFixed(2)}%
+                    <strong>Memory percentage:</strong>{' '}
+                    {process.memory_percent ? (
+                      `${process.memory_percent.toFixed(2)}%`
+                    ) : (
+                      <LockOutlined
+                        css={css`
+                          font-size: 1.2rem;
+                        `}
+                      />
+                    )}
                   </p>
                 </Card>
               </li>

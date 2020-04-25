@@ -15,7 +15,7 @@ export type MachineData = {
 // Machine Request Error
 type MachineError = { detail: string };
 
-// State
+// View state
 type MachineState = {
   data: MachineData[];
   loading: boolean;
@@ -57,6 +57,11 @@ const machineViewSlice = createSlice({
       state.error = payload;
       state.loading = false;
     },
+    reset(state) {
+      state.error = false;
+      state.loading = true;
+      state.data = [];
+    },
   },
 });
 
@@ -65,6 +70,7 @@ const {
   requestCreateMachineSuccess,
   requestMachineError,
   requestDeleteMachinesSuccess,
+  reset,
 } = machineViewSlice.actions;
 
 export const requestMachines = () => (dispatch: Dispatch) => {
@@ -102,6 +108,10 @@ export const deleteMachine = (id: number) => (dispatch: Dispatch) => {
       dispatch(requestDeleteMachinesSuccess(data)),
     )
     .catch((error: AxiosError) => dispatch(error?.response?.data));
+};
+
+export const resetMachineState = () => (dispatch: Dispatch) => {
+  dispatch(reset());
 };
 
 export default machineViewSlice.reducer;

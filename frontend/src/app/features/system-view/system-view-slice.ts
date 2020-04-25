@@ -1,4 +1,4 @@
-import { createSlice, Dispatch } from '@reduxjs/toolkit';
+import { createSlice, Dispatch, PayloadAction } from '@reduxjs/toolkit';
 
 type Memory = {
   total: number;
@@ -24,14 +24,6 @@ type SocketData = {
   cpu: number[];
 };
 
-type ProcessesPayload = {
-  payload: SocketData;
-};
-
-type ProcessesErrorPayload = {
-  payload: string;
-};
-
 type ProcessesViewState = {
   data: false | SocketData;
   loading: boolean;
@@ -51,7 +43,7 @@ const systemPreviewSlice = createSlice({
     websocketConnection(state) {
       state.loading = true;
     },
-    websocketConnectionSuccess(state, { payload }: ProcessesPayload) {
+    websocketConnectionSuccess(state, { payload }: PayloadAction<SocketData>) {
       state.error = false;
       state.loading = false;
       state.data = payload;
@@ -61,7 +53,7 @@ const systemPreviewSlice = createSlice({
       state.loading = true;
       state.data = false;
     },
-    websocketConnectionError(state, { payload }: ProcessesErrorPayload) {
+    websocketConnectionError(state, { payload }: PayloadAction<string>) {
       state.error = payload;
     },
   },
@@ -83,10 +75,16 @@ export const connectWebsocket = (url: string) => (dispatch: Dispatch) => {
   if (socket) {
     socket.close();
   }
+
   socket = new WebSocket(url);
   socket.onopen = () => {
     dispatch(websocketConnection());
   };
+
+  socket.onerror = () => {
+    dispatch(websocketConnectionError('Failed to connect to ' + url));
+  };
+
   socket.onmessage = ({ data }) => {
     dispatch(websocketConnectionSuccess(JSON.parse(data)));
   };

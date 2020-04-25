@@ -1,16 +1,11 @@
 /** @jsx jsx */
 
 import { css, jsx } from '@emotion/core';
-import { setDefault, memoryConverter } from '../utils';
+import { memoryConverter } from '../utils';
 import { Card } from 'antd';
+import { LockOutlined } from '@ant-design/icons';
 
-const extractMemoryInfo = (memoryTypes: number[] | null) => {
-  if (!memoryTypes) {
-    // If there's no memory types just return a fixed array
-    // where the memory usage is 0 in both physical and virtual
-    return [0.0, 0.0];
-  }
-
+const extractMemoryInfo = (memoryTypes: number[]) => {
   const relevantMemoryTypes = [];
   for (let i = 0; i < 2; i++) {
     const memory = memoryTypes[i];
@@ -20,7 +15,7 @@ const extractMemoryInfo = (memoryTypes: number[] | null) => {
 };
 
 type ProcessMemoryinformationProps = {
-  memoryInfo: number[];
+  memoryInfo: number[] | null;
   memoryPercent: number;
 };
 
@@ -29,32 +24,37 @@ const ProcessMemoryInformation = ({
   memoryPercent,
 }: ProcessMemoryinformationProps) => {
   const memoryTypes = ['Physical', 'Virtual'];
-  const memory = extractMemoryInfo(memoryInfo);
+  const memory = memoryInfo ? extractMemoryInfo(memoryInfo) : null;
 
   return (
     <Card>
       <h2>Memory Information</h2>
       <ul>
         <li>
-          <strong>Memory Usage:</strong>{' '}
-          {setDefault(memoryPercent, 0).toFixed(2)}%
+          <strong>Percentage:</strong>{' '}
+          {memoryPercent !== null ? (
+            `${memoryPercent.toFixed(2)}%`
+          ) : (
+            <LockOutlined
+              css={css`
+                font-size: 1.2rem;
+              `}
+            />
+          )}
         </li>
-        <li
-          css={css`
-            display: flex;
-          `}
-        >
-          <strong>Memory Types:</strong>
-          <div
-            css={css`
-              display: flex;
-              margin-left: 5px;
-            `}
-          >
-            {memory.map(
-              (value, i) => `${memoryTypes[i]}: ${memoryConverter(value)} GB `,
-            )}
-          </div>
+        <li>
+          <strong>Memory Types:</strong>{' '}
+          {memory ? (
+            memory.map(
+              (value, i) => `${memoryTypes[i]} ${memoryConverter(value)}GB `,
+            )
+          ) : (
+            <LockOutlined
+              css={css`
+                font-size: 1.2rem;
+              `}
+            />
+          )}
         </li>
       </ul>
     </Card>

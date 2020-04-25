@@ -1,6 +1,8 @@
-import React from 'react';
-import { setDefault } from '../utils';
+/** @jsx jsx */
+
+import { css, jsx } from '@emotion/core';
 import { Card } from 'antd';
+import { LockOutlined } from '@ant-design/icons';
 
 type ProcessCPUInformationProps = {
   cpuPercent: number;
@@ -16,11 +18,28 @@ const ProcessCPUInformation = ({
       <h2>CPU Information</h2>
       <ul>
         <li>
-          <strong>CPU Usage:</strong> {setDefault(cpuPercent, 0)}%
+          <strong>CPU Usage:</strong>{' '}
+          {cpuPercent !== -1 ? (
+            `${cpuPercent}%`
+          ) : (
+            <LockOutlined
+              css={css`
+                font-size: 1.2rem;
+              `}
+            />
+          )}
         </li>
         <li>
           <strong>CPU User Time:</strong>{' '}
-          {cpuTimes ? Math.round(setDefault(cpuTimes[0], 0)) : 0}s
+          {cpuTimes ? (
+            `${Math.round(cpuTimes[0])}s`
+          ) : (
+            <LockOutlined
+              css={css`
+                font-size: 1.2rem;
+              `}
+            />
+          )}
         </li>
       </ul>
     </Card>

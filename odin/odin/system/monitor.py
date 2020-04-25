@@ -1,5 +1,6 @@
 import asyncio
 import psutil
+import time
 
 from dataclasses import dataclass, asdict
 from fastapi import HTTPException
@@ -56,6 +57,27 @@ def query_process(pid: int) -> psutil.Process:
         raise HTTPException(
             status_code=404, detail="Process is not running anymore"
         )
+
+    # process.cpu_percent() works in a funny way where at the first call
+    # we get a 0.0 since there's no value for the percentage at that point
+    # and the following percentage will be the current process usage + previous
+    start = time.time()
+    try:
+        while process.cpu_percent() == 0.0:
+            process.cpu_percent()
+            current = time.time()
+            td = current - start
+            if td > 0.3:
+                break
+    except psutil.AccessDenied:
+
+        def patched_cpu_percent():
+            return -1
+
+        # Means user has no access to cpu data
+        # in this cases we return a custom number
+        # so it can be indentified has an anomally
+        process.cpu_percent = patched_cpu_percent
 
     return process
 

@@ -1,25 +1,21 @@
 /** @jsx jsx */
 
 import { css, jsx } from '@emotion/core';
-import { useEffect, useState } from 'react';
+import { useEffect, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { isEmpty } from 'lodash';
 
-import Loading from '../../components/loading';
-import { Process404Error } from '../../components/error';
 import {
   requestProcess,
-  KillProcessData,
-  RequestProcessData,
   killProcess,
   resetProcess,
 } from './process-view-slice';
-import { Button } from 'antd';
+import { Button, Result, notification } from 'antd';
 import ProcessCPUInformation from '../../components/process-cpu-information';
 import ProcessMemoryInformation from '../../components/process-memory-information';
 import ProcessEnvironment from '../../components/process-environment';
 import { RootState } from '../../root-reducer';
-import { RouteComponentProps } from '@reach/router';
+import { RouteComponentProps, navigate } from '@reach/router';
+import { LockOutlined, LoadingOutlined } from '@ant-design/icons';
 
 const dateManipulator = (unixTimestamp: number) => {
   const date = new Date(Math.round(unixTimestamp) * 1000);
@@ -30,11 +26,21 @@ interface ProcessViewProps extends RouteComponentProps<{ pid: number }> {}
 
 const ProcessView = ({ pid }: ProcessViewProps) => {
   const dispatch = useDispatch();
-  const [processKilled, setProcessKilled] = useState(false);
 
   const selectProcess = (state: RootState) => state.processView;
-  const { data, loading, error } = useSelector(selectProcess);
+  const { processData, processKilled, loading, error } = useSelector(
+    selectProcess,
+  );
 
+  // Notifications
+  const openNotificationWithIcon = () => {
+    notification['success']({
+      message: 'Process killed',
+      description: `Process ${pid} has been killed with success.`,
+    });
+  };
+
+  // Effects
   useEffect(() => {
     if (pid) {
       dispatch(requestProcess(pid));
@@ -44,22 +50,59 @@ const ProcessView = ({ pid }: ProcessViewProps) => {
     };
   }, []);
 
-  // Guard against possible websocket errors and return a error component
-  // TODO: Create an error page that should get the error and render that instead
-  if (error) return <Process404Error error={error.detail} />;
+  const ProcessResult = ({ message }: { message: string }) => (
+    <Result
+      className="container"
+      title={message}
+      css={css`
+        text-align: center;
 
-  if (!pid) return <Process404Error error="Process not found" />;
+        .ant-result-content {
+          background: white;
+        }
+      `}
+    >
+      <Button
+        onClick={() => {
+          navigate('/processes');
+        }}
+        type="primary"
+        css={css`
+          width: 100%;
+        `}
+      >
+        Check all processes
+      </Button>
+    </Result>
+  );
 
-  // Guard when the data is loading and render a loading component
-  // TODO: Create a proper loading component that should be rendered instead
-  if (loading || !data) return <Loading />;
+  if (error) return <ProcessResult message={error.detail} />;
 
-  if (processKilled && data) {
-    const killProcessData = data as KillProcessData;
-    return <h1>{killProcessData.detail}</h1>;
+  if (!pid) return <ProcessResult message="No PID provided" />;
+
+  if (processKilled) {
+    navigate('/processes');
   }
 
-  const processData = data as RequestProcessData;
+  if (loading || !processData) {
+    return (
+      <div
+        className="container"
+        css={css`
+          align-items: center;
+          align-content: center;
+          text-align: center;
+          margin-top: 4rem;
+        `}
+      >
+        <LoadingOutlined
+          css={css`
+            font-size: 5rem;
+          `}
+        />
+      </div>
+    );
+  }
 
   return (
     <div
@@ -78,7 +121,7 @@ const ProcessView = ({ pid }: ProcessViewProps) => {
         `}
       >
         <h3>
-          Process name: {processData.name}{' '}
+          Name: {processData.name}{' '}
           <span
             css={css`
               margin-left: 10px;
@@ -97,8 +140,9 @@ const ProcessView = ({ pid }: ProcessViewProps) => {
         <Button
           onClick={() => {
             dispatch(killProcess(pid));
-            setProcessKilled(true);
+            openNotificationWithIcon();
           }}
+          disabled={processData.username === 'root'}
           type="primary"
         >
           Kill Process
@@ -118,7 +162,7 @@ const ProcessView = ({ pid }: ProcessViewProps) => {
         `}
       >
         <p>
-          <strong>Process ID:</strong> {processData.pid}
+          <strong>PID:</strong> {processData.pid}
         </p>
         <div
           css={css`
@@ -166,22 +210,34 @@ const ProcessView = ({ pid }: ProcessViewProps) => {
               <strong>Created at</strong>
               <p>{dateManipulator(processData.create_time)}</p>
             </li>
-            {processData.num_threads ? (
-              <li>
-                <strong>Thread number</strong> <p>{processData.num_threads}</p>
-              </li>
-            ) : null}
-            {processData.exe ? (
-              <li>
-                <strong>Executable</strong>
-                <p>{processData.exe}</p>
-              </li>
-            ) : null}
-            {!isEmpty(processData.environ) ? (
-              <li>
-                <ProcessEnvironment environment={processData.environ} />
-              </li>
-            ) : null}
+            <li>
+              <strong>Thread number</strong>{' '}
+              <p>
+                {processData.num_threads ?? (
+                  <LockOutlined
+                    css={css`
+                      font-size: 1.2rem;
+                    `}
+                  />
+                )}
+              </p>
+            </li>
+            <li>
+              <strong>Executable</strong>
+              <p>
+                {processData.exe ?? (
+                  <LockOutlined
+                    css={css`
+                      font-size: 1.2rem;
+                    `}
+                  />
+                )}
+              </p>
+            </li>
+
+            <li>
+              <ProcessEnvironment environment={processData.environ} />
+            </li>
           </ul>
         </div>
       </div>

@@ -10,13 +10,12 @@ import {
   MouseEvent,
 } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-
-import Loading from '../../components/loading';
 import { Button, Input, Card, Form, Modal, Anchor } from 'antd';
 import {
   requestMachines,
   createMachine,
   deleteMachine,
+  resetMachineState,
 } from './machines-view-slice';
 import { RootState } from '../../root-reducer';
 import { RouteComponentProps, Link } from '@reach/router';
@@ -47,6 +46,20 @@ const MachineForm = ({ setName, setHost, setAccessKey }: MachineModalProps) => {
   );
 };
 
+const createMachines = () => {
+  const machineArray = [];
+  for (let i = 0; i < 2; i++) {
+    machineArray.push({
+      id: i,
+      name: 'dummy',
+      access_key: 'dummy',
+      host: 'dummy',
+      created_at: 'dummy',
+    });
+  }
+  return machineArray;
+};
+
 const MachineView = (_: RouteComponentProps) => {
   const [showMachineModal, setShowMachineModal] = useState(false);
   const [name, setName] = useState('');
@@ -60,15 +73,15 @@ const MachineView = (_: RouteComponentProps) => {
 
   useEffect(() => {
     dispatch(requestMachines());
+
+    return () => {
+      dispatch(resetMachineState());
+    };
   }, []);
 
   // Guard against possible websocket errors and return a error component
   // TODO: Create an error page that should get the error and render that instead
   if (error) return <h1>{error.detail}</h1>;
-
-  // Guard when the data is loading and render a loading component
-  // TODO: Create a proper loading component that should be rendered instead
-  if (loading) return <Loading />;
 
   const handleAdd = (e: MouseEvent<HTMLElement, globalThis.MouseEvent>) => {
     e.preventDefault();
@@ -84,7 +97,7 @@ const MachineView = (_: RouteComponentProps) => {
     <Fragment>
       <div
         css={css`
-          border-bottom: 1px solid #d0d0d0;
+          border-bottom: 1px solid #f0f0f0;
           background: #fafafa;
           padding: 2rem;
 
@@ -121,7 +134,7 @@ const MachineView = (_: RouteComponentProps) => {
                 background: #fafafa;
               `}
             >
-              {data.map((machine) => {
+              {[...(loading ? createMachines() : data)].map((machine) => {
                 return (
                   <li
                     key={machine.id}
@@ -134,6 +147,7 @@ const MachineView = (_: RouteComponentProps) => {
                     `}
                   >
                     <Card
+                      loading={loading}
                       css={css`
                         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.12);
                       `}
@@ -161,12 +175,19 @@ const MachineView = (_: RouteComponentProps) => {
                         <strong>Created At: </strong>
                         {machine.created_at}
                       </p>
-                      <Button
-                        onClick={() => dispatch(deleteMachine(machine.id))}
+                      <div
+                        css={css`
+                          display: flex;
+                          justify-content: flex-end;
+                        `}
                       >
-                        🗑
-                      </Button>
-                      <Button>🖊</Button>
+                        <Button
+                          onClick={() => dispatch(deleteMachine(machine.id))}
+                        >
+                          Delete
+                        </Button>
+                        <Button type="primary">Edit</Button>
+                      </div>
                     </Card>
                   </li>
                 );
@@ -197,9 +218,6 @@ const MachineView = (_: RouteComponentProps) => {
           setName={setName}
         />
       </Modal>
-      {/* {showMachineModal ? (
-        <MachineModal showModal={setShowMachineModal} />
-      ) : null} */}
     </Fragment>
   );
 };

@@ -1,5 +1,5 @@
-import axios from 'axios';
-import { createSlice, Dispatch } from '@reduxjs/toolkit';
+import axios, { AxiosError } from 'axios';
+import { createSlice, Dispatch, PayloadAction } from '@reduxjs/toolkit';
 
 // Process typing
 
@@ -20,17 +20,9 @@ export type RequestProcessData = {
   deleted: boolean;
 };
 
-type RequestProcessPayload = {
-  payload: RequestProcessData;
-};
-
 // Kill Process
 export type KillProcessData = {
   detail: string;
-};
-
-type KillProcessPayload = {
-  payload: KillProcessData;
 };
 
 // Error typing
@@ -38,19 +30,17 @@ type ProcessError = {
   detail: string;
 };
 
-type ProcessErrorPayload = {
-  payload: ProcessError;
-};
-
-// State Typing
+// Process view state
 type ProcessViewState = {
-  data: false | RequestProcessData | KillProcessData;
+  processData: false | RequestProcessData;
+  processKilled: boolean;
   loading: boolean;
   error: false | ProcessError;
 };
 
 const initialState: ProcessViewState = {
-  data: false,
+  processData: false,
+  processKilled: false,
   loading: true,
   error: false,
 };
@@ -59,24 +49,28 @@ const processViewSlice = createSlice({
   name: 'processView',
   initialState,
   reducers: {
-    requestProcessSuccess(state, { payload }: RequestProcessPayload) {
+    requestProcessSuccess(
+      state,
+      { payload }: PayloadAction<RequestProcessData>,
+    ) {
       state.error = false;
       state.loading = false;
-      state.data = payload;
+      state.processData = payload;
     },
-    requestProcessError(state, { payload }: ProcessErrorPayload) {
+    requestProcessError(state, { payload }: PayloadAction<ProcessError>) {
       state.error = payload;
       state.loading = false;
     },
-    killProcessSuccess(state, { payload }: KillProcessPayload) {
+    killProcessSuccess(state) {
       state.error = false;
       state.loading = false;
-      state.data = payload;
+      state.processKilled = true;
     },
-    clearProcess(state) {
+    reset(state) {
       state.error = false;
       state.loading = false;
-      state.data = false;
+      state.processKilled = false;
+      state.processData = false;
     },
   },
 });
@@ -85,7 +79,7 @@ const {
   requestProcessSuccess,
   requestProcessError,
   killProcessSuccess,
-  clearProcess,
+  reset,
 } = processViewSlice.actions;
 
 export const requestProcess = (id: number) => (dispatch: Dispatch) => {
@@ -98,12 +92,14 @@ export const requestProcess = (id: number) => (dispatch: Dispatch) => {
 export const killProcess = (id: number) => (dispatch: Dispatch) => {
   axios
     .post(`http://127.0.0.1:8000/processes/${id}/kill`)
-    .then(({ data }) => dispatch(killProcessSuccess(data)))
-    .catch((error) => dispatch(requestProcessError(error.response.data)));
+    .then(() => dispatch(killProcessSuccess()))
+    .catch((error: AxiosError) =>
+      dispatch(requestProcessError(error.response?.data)),
+    );
 };
 
 export const resetProcess = () => (dispatch: Dispatch) => {
-  dispatch(clearProcess());
+  dispatch(reset());
 };
 
 export default processViewSlice.reducer;

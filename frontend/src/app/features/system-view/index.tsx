@@ -6,12 +6,12 @@ import { useSelector, useDispatch } from 'react-redux';
 import UserPreview from '../../components/user-preview';
 import MemoryInformation from '../../components/memory-information';
 import CpuInformation from '../../components/cpu-information';
-import { WebSocketError } from '../../components/error';
-import Loading from '../../components/loading';
 import { RootState } from '../../root-reducer';
 import { Fragment, useEffect } from 'react';
 import { RouteComponentProps } from '@reach/router';
 import { connectWebsocket, closeWebsocket } from './system-view-slice';
+import { LoadingOutlined, CloseOutlined } from '@ant-design/icons';
+import { Result } from 'antd';
 
 interface SystemViewProps extends RouteComponentProps<{ machineId: number }> {}
 
@@ -29,15 +29,38 @@ const SystemView = ({ machineId }: SystemViewProps) => {
     };
   }, []);
 
-  console.log(data);
-
   // Guard against possible websocket errors and return a error component
   // TODO: Create an error page that should get the error and render that instead
-  if (error) return <WebSocketError />;
+  if (error)
+    return (
+      <Result
+        status="error"
+        title="Error creating socket connection"
+        subTitle={error}
+        icon={<CloseOutlined />}
+      />
+    );
 
   // Guard when the data is loading and render a loading component
   // TODO: Create a proper loading component that should be rendered instead
-  if (loading || !data) return <Loading />;
+  if (loading || !data)
+    return (
+      <div
+        className="container"
+        css={css`
+          align-items: center;
+          align-content: center;
+          text-align: center;
+          margin-top: 4rem;
+        `}
+      >
+        <LoadingOutlined
+          css={css`
+            font-size: 5rem;
+          `}
+        />
+      </div>
+    );
 
   if (!machineId) return <h1>Unknow machine</h1>;
 
@@ -46,7 +69,7 @@ const SystemView = ({ machineId }: SystemViewProps) => {
       <div
         css={css`
           padding: 2rem;
-          border-bottom: 1px solid #d0d0d0;
+          border-bottom: 1px solid #f0f0f0;
           margin-bottom: 2rem;
           background: #fafafa;
         `}
@@ -66,9 +89,9 @@ const SystemView = ({ machineId }: SystemViewProps) => {
             }
           `}
         >
-          <MemoryInformation type="Memory" {...data.memory} />
-          <MemoryInformation type="Swap" {...data.swap} />
-          <CpuInformation cpu={data.cpu} />
+          <MemoryInformation type="Memory" {...data.memory} loading={loading} />
+          <MemoryInformation type="Swap" {...data.swap} loading={loading} />
+          <CpuInformation cpu={data.cpu} loading={loading} />
         </div>
       </div>
       <div

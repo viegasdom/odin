@@ -5,11 +5,12 @@ import { Card, Progress } from 'antd';
 
 type CPUInformationProps = {
   cpu: number[];
+  loading: boolean;
 };
 
-const CpuInformation = ({ cpu }: CPUInformationProps) => {
+const CpuInformation = ({ cpu, loading }: CPUInformationProps) => {
   return (
-    <Card>
+    <Card loading={loading}>
       <h2>CPU Information</h2>
       <div
         css={css`
