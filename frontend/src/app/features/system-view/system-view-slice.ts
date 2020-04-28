@@ -91,10 +91,12 @@ export const connectWebsocket = (url: string) => (dispatch: Dispatch) => {
 };
 
 export const closeWebsocket = () => (dispatch: Dispatch) => {
+  console.log(socket);
   if (!socket) {
     return;
   }
   socket.close(1000);
+  console.log('closed');
   dispatch(websocketCloseSuccess());
 };
 

@@ -3,7 +3,7 @@ import psutil
 import time
 
 from dataclasses import dataclass, asdict
-from fastapi import HTTPException
+from starlette.exceptions import HTTPException
 from typing import Any, Dict, List, Generator, Optional
 
 from .filters import Search

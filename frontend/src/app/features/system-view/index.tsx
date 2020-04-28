@@ -12,8 +12,12 @@ import { RouteComponentProps } from '@reach/router';
 import { connectWebsocket, closeWebsocket } from './system-view-slice';
 import { LoadingOutlined, CloseOutlined } from '@ant-design/icons';
 import { Result } from 'antd';
+import {
+  requestMachines,
+  resetMachineState,
+} from '../machines-view/machines-view-slice';
 
-interface SystemViewProps extends RouteComponentProps<{ machineId: number }> {}
+interface SystemViewProps extends RouteComponentProps<{ machineId: string }> {}
 
 const SystemView = ({ machineId }: SystemViewProps) => {
   const dispatch = useDispatch();
@@ -21,17 +25,39 @@ const SystemView = ({ machineId }: SystemViewProps) => {
   const selectSystem = (state: RootState) => state.systemPreview;
   const { data, loading, error } = useSelector(selectSystem);
 
+  const selectMachines = (state: RootState) => state.machineView;
+  const {
+    data: machineData,
+    loading: machineLoading,
+    error: machineError,
+  } = useSelector(selectMachines);
+
   useEffect(() => {
-    dispatch(connectWebsocket('ws://localhost:8000/system'));
+    if (!machineData.length) {
+      dispatch(requestMachines());
+    }
 
     return () => {
       dispatch(closeWebsocket());
+      dispatch(resetMachineState());
     };
   }, []);
 
+  useEffect(() => {
+    if (!machineId) {
+      return;
+    }
+
+    const machineIdNumber = parseInt(machineId);
+    const machine = machineData.find((m) => m.id === machineIdNumber);
+    if (machine) {
+      dispatch(connectWebsocket(`ws://${machine?.host}/system`));
+    }
+  }, [machineData]);
+
   // Guard against possible websocket errors and return a error component
   // TODO: Create an error page that should get the error and render that instead
-  if (error)
+  if (error || machineError) {
     return (
       <Result
         status="error"
@@ -40,10 +66,11 @@ const SystemView = ({ machineId }: SystemViewProps) => {
         icon={<CloseOutlined />}
       />
     );
+  }
 
   // Guard when the data is loading and render a loading component
   // TODO: Create a proper loading component that should be rendered instead
-  if (loading || !data)
+  if (loading || machineLoading || !data || !machineData) {
     return (
       <div
         className="container"
@@ -61,6 +88,7 @@ const SystemView = ({ machineId }: SystemViewProps) => {
         />
       </div>
     );
+  }
 
   if (!machineId) return <h1>Unknow machine</h1>;
 

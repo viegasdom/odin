@@ -43,7 +43,7 @@ const ProcessesPreview = ({ processes }: ProcessesPreviewProps) => {
       <ul
         css={css`
           display: grid;
-          grid-template-columns: repeat(3, auto);
+          grid-template-columns: repeat(2, auto);
           grid-row-gap: 10px;
           grid-column-gap: 15px;
           margin-bottom: 1rem;

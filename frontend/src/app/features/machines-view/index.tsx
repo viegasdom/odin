@@ -1,50 +1,18 @@
 /** @jsx jsx */
 
 import { css, jsx } from '@emotion/core';
-import {
-  useEffect,
-  useState,
-  Fragment,
-  Dispatch,
-  SetStateAction,
-  MouseEvent,
-} from 'react';
+import { useEffect, useState, Fragment, MouseEvent } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Button, Input, Card, Form, Modal, Anchor } from 'antd';
 import {
   requestMachines,
   createMachine,
   deleteMachine,
+  updateMachine,
   resetMachineState,
 } from './machines-view-slice';
 import { RootState } from '../../root-reducer';
 import { RouteComponentProps, Link } from '@reach/router';
-
-type MachineModalProps = {
-  setName: Dispatch<SetStateAction<string>>;
-  setHost: Dispatch<SetStateAction<string>>;
-  setAccessKey: Dispatch<SetStateAction<string>>;
-};
-
-const MachineForm = ({ setName, setHost, setAccessKey }: MachineModalProps) => {
-  return (
-    <Form layout="vertical">
-      <Form.Item label="Name">
-        <Input type="text" onChange={(e) => setName(e.target.value)} />
-      </Form.Item>
-      <Form.Item label="Host">
-        <Input
-          type="text"
-          onChange={(e) => setHost(e.target.value)}
-          placeholder="192.0.0.1:3000, example.com"
-        />
-      </Form.Item>
-      <Form.Item label="Access Key">
-        <Input type="text" onChange={(e) => setAccessKey(e.target.value)} />
-      </Form.Item>
-    </Form>
-  );
-};
 
 const createMachines = () => {
   const machineArray = [];
@@ -62,6 +30,7 @@ const createMachines = () => {
 
 const MachineView = (_: RouteComponentProps) => {
   const [showMachineModal, setShowMachineModal] = useState(false);
+  const [editID, setEditID] = useState(0);
   const [name, setName] = useState('');
   const [host, setHost] = useState('');
   const [accessKey, setAccessKey] = useState('');
@@ -73,19 +42,19 @@ const MachineView = (_: RouteComponentProps) => {
 
   useEffect(() => {
     dispatch(requestMachines());
-
-    return () => {
-      dispatch(resetMachineState());
-    };
   }, []);
 
   // Guard against possible websocket errors and return a error component
   // TODO: Create an error page that should get the error and render that instead
   if (error) return <h1>{error.detail}</h1>;
 
-  const handleAdd = (e: MouseEvent<HTMLElement, globalThis.MouseEvent>) => {
+  const handleOk = (e: MouseEvent<HTMLElement, globalThis.MouseEvent>) => {
     e.preventDefault();
-    dispatch(createMachine({ name, host, accessKey }));
+    if (editID) {
+      dispatch(updateMachine(editID, { name, host, accessKey }));
+    } else {
+      dispatch(createMachine({ name, host, accessKey }));
+    }
     setShowMachineModal(false);
   };
 
@@ -125,7 +94,7 @@ const MachineView = (_: RouteComponentProps) => {
               css={css`
                 display: grid;
                 margin-top: 1rem;
-                grid-template-columns: repeat(2, auto);
+                grid-template-columns: repeat(2, 50%);
                 grid-template-rows: repeat(2, auto);
                 grid-row-gap: 10px;
                 grid-column-gap: 15px;
@@ -186,7 +155,15 @@ const MachineView = (_: RouteComponentProps) => {
                         >
                           Delete
                         </Button>
-                        <Button type="primary">Edit</Button>
+                        <Button
+                          type="primary"
+                          onClick={() => {
+                            setShowMachineModal(true);
+                            setEditID(machine.id);
+                          }}
+                        >
+                          Edit
+                        </Button>
                       </div>
                     </Card>
                   </li>
@@ -199,7 +176,8 @@ const MachineView = (_: RouteComponentProps) => {
         </div>
       </div>
       <Modal
-        onOk={handleAdd}
+        destroyOnClose
+        onOk={handleOk}
         onCancel={handleCancel}
         visible={showMachineModal}
         title="Add Machine"
@@ -207,16 +185,26 @@ const MachineView = (_: RouteComponentProps) => {
           <Button key="back" onClick={handleCancel}>
             Cancel
           </Button>,
-          <Button key="submit" type="primary" onClick={handleAdd}>
-            Add
+          <Button key="submit" type="primary" onClick={handleOk}>
+            Ok
           </Button>,
         ]}
       >
-        <MachineForm
-          setAccessKey={setAccessKey}
-          setHost={setHost}
-          setName={setName}
-        />
+        <Form layout="vertical">
+          <Form.Item label="Name">
+            <Input type="text" onChange={(e) => setName(e.target.value)} />
+          </Form.Item>
+          <Form.Item label="Host">
+            <Input
+              type="text"
+              onChange={(e) => setHost(e.target.value)}
+              placeholder="192.0.0.1:3000, example.com"
+            />
+          </Form.Item>
+          <Form.Item label="Access Key">
+            <Input type="text" onChange={(e) => setAccessKey(e.target.value)} />
+          </Form.Item>
+        </Form>
       </Modal>
     </Fragment>
   );

@@ -53,6 +53,12 @@ const machineViewSlice = createSlice({
       state.loading = false;
       state.data = state.data.filter((machine) => machine.id !== payload);
     },
+    requestPatchMachineSuccess(state, { payload }: PayloadAction<MachineData>) {
+      state.error = false;
+      state.loading = false;
+      const idx = state.data.findIndex((machine) => machine.id === payload.id);
+      state.data[idx] = payload;
+    },
     requestMachineError(state, { payload }: PayloadAction<MachineError>) {
       state.error = payload;
       state.loading = false;
@@ -70,6 +76,7 @@ const {
   requestCreateMachineSuccess,
   requestMachineError,
   requestDeleteMachinesSuccess,
+  requestPatchMachineSuccess,
   reset,
 } = machineViewSlice.actions;
 
@@ -104,8 +111,24 @@ export const createMachine = ({ accessKey, name, host }: MachinePostData) => (
 export const deleteMachine = (id: number) => (dispatch: Dispatch) => {
   axios
     .delete(`http://127.0.0.1:5000/machines/${id}`)
-    .then(({ data }: { data: number }) =>
-      dispatch(requestDeleteMachinesSuccess(data)),
+    .then(() => dispatch(requestDeleteMachinesSuccess(id)))
+    .catch((error: AxiosError) => dispatch(error?.response?.data));
+};
+
+type MachinePatchData = { accessKey?: string; name?: string; host?: string };
+
+export const updateMachine = (
+  id: number,
+  { accessKey, name, host }: MachinePatchData,
+) => (dispatch: Dispatch) => {
+  axios
+    .patch(`http://127.0.0.1:5000/machines/${id}`, {
+      ...(accessKey && { access_key: accessKey }),
+      ...(name && { name }),
+      ...(host && { host }),
+    })
+    .then(({ data }: { data: MachineData }) =>
+      dispatch(requestPatchMachineSuccess(data)),
     )
     .catch((error: AxiosError) => dispatch(error?.response?.data));
 };

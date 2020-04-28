@@ -34,14 +34,6 @@ const initialState: ProcessesViewState = {
   error: false,
 };
 
-type ErrorPayload = {
-  payload: { detail: string };
-};
-
-type ProcessData = {
-  payload: Processes[];
-};
-
 const processesViewSlice = createSlice({
   name: 'processesView',
   initialState,

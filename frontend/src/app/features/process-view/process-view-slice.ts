@@ -90,8 +90,9 @@ export const requestProcess = (id: number) => (dispatch: Dispatch) => {
 };
 
 export const killProcess = (id: number) => (dispatch: Dispatch) => {
+  console.log('wtf ');
   axios
-    .post(`http://127.0.0.1:8000/processes/${id}/kill`)
+    .delete(`http://127.0.0.1:8000/processes/${id}`)
     .then(() => dispatch(killProcessSuccess()))
     .catch((error: AxiosError) =>
       dispatch(requestProcessError(error.response?.data)),
