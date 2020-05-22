@@ -122,22 +122,6 @@ const SystemView = ({ machineId }: SystemViewProps) => {
           <CpuInformation cpu={data.cpu} loading={loading} />
         </div>
       </div>
-      <div
-        className="container"
-        css={css`
-          margin-bottom: 0;
-        `}
-      >
-        {Object.entries(data.processes).map(([username, processes]) => {
-          return (
-            <UserPreview
-              key={username}
-              username={username}
-              processes={processes}
-            />
-          );
-        })}
-      </div>
     </Fragment>
   );
 };

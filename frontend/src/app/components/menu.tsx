@@ -31,6 +31,7 @@ const AppMenu = ({ location }: MenuProps) => {
       >
         <Menu.Item key="machines">Machines</Menu.Item>
         <Menu.Item key="processes">Processes</Menu.Item>
+        <Menu.Item key="terminal">Terminal</Menu.Item>
       </Menu>
       <div
         css={css`

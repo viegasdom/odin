@@ -8,6 +8,7 @@ import SystemView from './features/system-view';
 import ProcessView from './features/process-view';
 import ProcessesView from './features/processes-view';
 import AppMenu from './components/menu';
+import Terminal from './features/terminal-view';
 
 const App = () => {
   return (
@@ -18,6 +19,7 @@ const App = () => {
         <SystemView path="/machines/:machineId/overview" />
         <ProcessesView path="/processes" />
         <ProcessView path="/processes/:pid" />
+        <Terminal path="/terminal" />
       </Router>
     </Layout>
   );

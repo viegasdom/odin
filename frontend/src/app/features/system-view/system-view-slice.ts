@@ -8,17 +8,7 @@ type Memory = {
   free: number;
 };
 
-type Processes = {
-  pid: number;
-  username: string;
-  name: string;
-  status: string;
-  cpu_percent: number;
-  memory_percent: number;
-};
-
 type SocketData = {
-  processes: { username: Processes[] };
   memory: Memory;
   swap: Memory;
   cpu: number[];

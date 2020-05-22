@@ -16,7 +16,7 @@ export type RequestProcessData = {
   create_time: number;
   num_threads: number;
   exe: string;
-  environ: { [key: string]: string };
+  environ: string;
   deleted: boolean;
 };
 

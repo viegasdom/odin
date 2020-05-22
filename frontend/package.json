@@ -21,7 +21,9 @@
     "lodash": "^4.17.15",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
-    "react-redux": "^7.2.0"
+    "react-redux": "^7.2.0",
+    "xterm": "^4.6.0",
+    "xterm-addon-attach": "^0.6.0"
   },
   "prettier": {
     "semi": true,
